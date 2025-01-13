@@ -1,0 +1,60 @@
+﻿<Window x:Class="WorkoutTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WorkoutTracker"
+        xmlns:view="clr-namespace:WorkoutTracker.View" 
+        xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+        xmlns:converters="clr-namespace:WorkoutTracker.Converters" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        mc:Ignorable="d"
+        Title="Workout Tracker" Height="700" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="Gray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding UserVM.User.UserName}" Grid.Column="0" HorizontalAlignment="Left"/>
+            <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" HorizontalAlignment="Right"/>
+            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <Image Source="pack://application:,,,/WorkoutTracker;component/Resources/Background.jpg" Stretch="Fill" Grid.Row="1" />
+        
+        <view:StartView Grid.Row="1" Visibility="{Binding IsStartVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:ExerciseDetailsView Grid.Row="1" Visibility="{Binding IsExerciseDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:ExerciseListView Grid.Row="1" Visibility="{Binding IsExerciseListVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:StatisticsView Grid.Row="1" Visibility="{Binding IsStatisticsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:UserView Grid.Row="1" Visibility="{Binding IsUserVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:WorkoutListView Grid.Row="1" Visibility="{Binding IsWorkoutListVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:WorkoutView Grid.Row="1" Visibility="{Binding IsWorkoutVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+        <Grid Grid.Row="2" Background="Gray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}"/>
+            <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}"/>
+            <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}"/>
+        </Grid>
+    </Grid>
+</Window>

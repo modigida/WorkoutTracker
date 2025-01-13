@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="WorkoutTracker.View.ExerciseDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WorkoutTracker.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Bind to ExerciseName" FontSize="24" Grid.Row="0"/>
+
+        <CheckBox Content="Favorite" Grid.Row="1"/>
+
+        <StackPanel Orientation="Vertical" Grid.Row="2">
+            <TextBlock Text="Desciption"/>
+            <TextBlock Text="Bind to Description"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Grid.Row="3">
+            <TextBlock Text="Muscle Gropus"/>
+            <TextBlock Text="Bind to Description"/>
+        </StackPanel>
+
+        <Button Content="Delete" HorizontalAlignment="Right" Grid.Column="4"/>
+    </Grid>
+</UserControl>

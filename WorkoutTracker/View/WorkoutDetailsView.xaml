@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="WorkoutTracker.View.WorkoutDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WorkoutTracker.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Bind to Date" FontSize="24" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
+
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="StartTime"/>
+                <TextBlock Text="Bind to StartTime"/>
+                <TextBlock Text="EndTime"/>
+                <TextBlock Text="Bind to EndTime"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Duration"/>
+                <TextBlock Text="Bind to calculation for timeSpan"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0">
+                <TextBlock Text="Exercises" FontSize="24"/>
+                <!-- Add Listview displaying registered exercises -->
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Grid.Column="1">
+                <TextBlock Text="Sets" FontSize="24"/>
+                <!-- Add Listview displaying registered sets -->
+            </StackPanel>
+        </Grid>
+
+        <CheckBox Content="IsFavorite" Grid.Row="3" />
+
+        <StackPanel Orientation="Vertical" Grid.Row="4" >
+            <TextBlock Text="Notes" FontSize="24"/>
+            <TextBlock Text="Bind to Notes"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
