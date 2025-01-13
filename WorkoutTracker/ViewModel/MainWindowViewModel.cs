@@ -2,12 +2,13 @@
 using System.Printing;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
+using WorkoutTracker.Model;
 
 namespace WorkoutTracker.ViewModel;
 public class MainWindowViewModel : BaseViewModel
 {
+    public ExerciseDetailsViewModel ExerciseDetailsVM { get; set; }
     public ExerciseListViewModel ExerciseListVM { get; set; }
-
     public StatisticsViewModel StatisticsVM { get; set; }
     public UserViewModel UserVM { get; set; }
     public WorkoutListViewModel WorkoutListVM { get; set; }
@@ -69,6 +70,7 @@ public class MainWindowViewModel : BaseViewModel
         IsStartVisible = true;
         StartText = "Choose a user to start";
 
+        ExerciseDetailsVM = new ExerciseDetailsViewModel();
         ExerciseListVM = new ExerciseListViewModel();
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this);
@@ -96,6 +98,8 @@ public class MainWindowViewModel : BaseViewModel
     }
     private void OpenExerciseDetails(object obj)
     {
+        // If added button is pressed = open details page to create new exercise
+        // If existing exercise is pressed = open details page to edit exercise
         SetViewVisibility(() => IsExerciseDetailsVisible = true);
     }
     private void OpenExerciseList(object obj)

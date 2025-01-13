@@ -3,32 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkoutTracker.View"
+             xmlns:local="clr-namespace:WorkoutTracker.View" 
+             xmlns:converters="clr-namespace:WorkoutTracker.Converters" 
+             xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
-    <Grid>
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <Grid HorizontalAlignment="Center" Width="350">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Bind to ExerciseName" FontSize="24" Grid.Row="0"/>
+        <TextBlock Text="{Binding ExerciseDetailsVM.Exercise.ExerciseName}" FontSize="34" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
-        <CheckBox Content="Favorite" Grid.Row="1"/>
+        <Button 
+            Command="{Binding ExerciseDetailsVM.IsFavoriteExerciseCommand}" 
+            Visibility="{Binding ExerciseDetailsVM.IsFavoriteExercise, Converter={StaticResource BoolToVisibilityConverter}}" 
+            Grid.Row="1" HorizontalAlignment="Center"
+            Height="30" Width="30">
+            <Button.Content>
+                <Image Source="pack://application:,,,/Resources/FavoriteSymbol.png"/>
+            </Button.Content>
+        </Button>
+        
+        <Button 
+            Command="{Binding ExerciseDetailsVM.IsFavoriteExerciseCommand}" 
+            Visibility="{Binding ExerciseDetailsVM.IsNotFavoriteExercise, Converter={StaticResource BoolToVisibilityConverter}}" 
+            Grid.Row="1" HorizontalAlignment="Center"
+            Height="30" Width="30">
+            <Button.Content>
+                <Image Source="pack://application:,,,/Resources/NotFavoriteSymbol.png"/>
+            </Button.Content>
+        </Button>
 
-        <StackPanel Orientation="Vertical" Grid.Row="2">
-            <TextBlock Text="Desciption"/>
-            <TextBlock Text="Bind to Description"/>
+        <StackPanel Orientation="Vertical" Grid.Row="2" >
+            <TextBlock Text="Description" FontSize="18"/>
+            <TextBox Text="{Binding ExerciseDetailsVM.Exercise.Description}" FontSize="14" TextWrapping="Wrap"/>
         </StackPanel>
 
-        <StackPanel Orientation="Vertical" Grid.Row="3">
-            <TextBlock Text="Muscle Gropus"/>
-            <TextBlock Text="Bind to Description"/>
+        <StackPanel Orientation="Vertical" Grid.Row="3" >
+            <TextBlock Text="Muscle Groups" HorizontalAlignment="Left" FontSize="18"/>
+            <ListView ItemsSource="{Binding ExerciseDetailsVM.Exercise.MuscleGroups}" HorizontalAlignment="Left" FontSize="14"/>
+
         </StackPanel>
 
-        <Button Content="Delete" HorizontalAlignment="Right" Grid.Column="4"/>
+        <Button Content="Delete" HorizontalAlignment="Right" Grid.Row="4"/>
     </Grid>
 </UserControl>

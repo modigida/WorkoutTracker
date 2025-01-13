@@ -10,6 +10,14 @@
 
   <ItemGroup>
     <None Remove="Resources\Background.jpg" />
+    <None Remove="Resources\FavoriteSymbol.png" />
+    <None Remove="Resources\NotFavoriteSymbol.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\NotFavoriteSymbol.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +26,9 @@
 
   <ItemGroup>
     <Resource Include="Resources\Background.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\FavoriteSymbol.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
