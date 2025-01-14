@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Printing;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Model;
@@ -56,7 +57,6 @@ public class MainWindowViewModel : BaseViewModel
         get => _isWorkoutVisible;
         set => SetProperty(ref _isWorkoutVisible, value);
     }
-
     public string StartText { get; set; }
 
     public ICommand OpenExerciseDetailsCommand { get; }
@@ -70,8 +70,8 @@ public class MainWindowViewModel : BaseViewModel
         IsStartVisible = true;
         StartText = "Choose a user to start";
 
-        ExerciseDetailsVM = new ExerciseDetailsViewModel();
-        ExerciseListVM = new ExerciseListViewModel();
+        ExerciseDetailsVM = new ExerciseDetailsViewModel(new ExerciseListViewModel(this));
+        ExerciseListVM = new ExerciseListViewModel(this);
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this);
         WorkoutListVM = new WorkoutListViewModel();
@@ -84,6 +84,7 @@ public class MainWindowViewModel : BaseViewModel
         OpenWorkoutListCommand = new RelayCommand(OpenWorkoutList);
         OpenWorkoutCommand = new RelayCommand(OpenWorkout);
     }
+
     private void SetViewVisibility(Action setVisible)
     {
         IsStartVisible = false;
@@ -96,11 +97,15 @@ public class MainWindowViewModel : BaseViewModel
 
         setVisible();
     }
-    private void OpenExerciseDetails(object obj)
+    public void OpenExerciseDetails(object obj)
     {
         // If added button is pressed = open details page to create new exercise
         // If existing exercise is pressed = open details page to edit exercise
+        ExerciseDetailsVM.GetExercise(ExerciseListVM.SelectedExercise);
+        
         SetViewVisibility(() => IsExerciseDetailsVisible = true);
+
+        ExerciseListVM.SelectedExercise = null;
     }
     private void OpenExerciseList(object obj)
     {

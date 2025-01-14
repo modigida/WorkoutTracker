@@ -39,9 +39,13 @@
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="{StaticResource GlobalBackgroundColor}"/>
+            <Setter Property="Background" Value="Gray"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="Gray"/>
         </Style>
 
         <Style TargetType="CheckBox">

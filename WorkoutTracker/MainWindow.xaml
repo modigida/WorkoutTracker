@@ -19,9 +19,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Background="Gray">
@@ -30,13 +30,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding UserVM.User.UserName}" Grid.Column="0" HorizontalAlignment="Left"/>
+            <TextBlock Text="{Binding UserVM.User.UserName}" Grid.Column="0" HorizontalAlignment="Left" FontSize="16" Margin="5,0,0,0"/>
             <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" HorizontalAlignment="Right"/>
-            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" HorizontalAlignment="Right"/>
+            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
         </Grid>
 
         <Image Source="pack://application:,,,/WorkoutTracker;component/Resources/Background.jpg" Stretch="Fill" Grid.Row="1" />
-        
+
         <view:StartView Grid.Row="1" Visibility="{Binding IsStartVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:ExerciseDetailsView Grid.Row="1" Visibility="{Binding IsExerciseDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:ExerciseListView Grid.Row="1" Visibility="{Binding IsExerciseListVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
@@ -51,7 +51,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
             <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}"/>
             <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}"/>
             <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}"/>

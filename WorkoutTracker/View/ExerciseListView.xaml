@@ -12,11 +12,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Exercises" FontSize="24"/>
+        <Grid>
+            <TextBlock Text="Exercises" FontSize="24" Margin="5,0,0,0"/>
             <!-- Add ComboBox to order exercises by name or favorite -->
-            <Button Content="Add Exercise" Command="{Binding OpenExerciseDetailsCommand}" HorizontalAlignment="Right"/>
-        </StackPanel>
-        <!-- Add listview here -->
+            <Button Content="Add Exercise" Command="{Binding OpenExerciseDetailsCommand}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+        </Grid>
+        <ListView 
+            Grid.Row="1" 
+            DataContext="{Binding ExerciseListVM}"
+            ItemsSource="{Binding Exercises}"
+            SelectedItem="{Binding SelectedExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ExerciseName}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>
