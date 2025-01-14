@@ -45,9 +45,9 @@ public class ExerciseDetailsViewModel : BaseViewModel
         }
     }
     public bool IsNotFavoriteExercise => !IsFavoriteExercise;
-    public ICommand IsFavoriteExerciseCommand { get; set; }
-    public ICommand AddMuscleGroupCommand { get; set; }
-    public ICommand DeleteMuscleGroupCommand { get; set; }
+    public ICommand IsFavoriteExerciseCommand { get; }
+    public ICommand AddMuscleGroupCommand { get; }
+    public ICommand DeleteMuscleGroupCommand { get; }
     public ExerciseDetailsViewModel(ExerciseListViewModel exerciseListViewModel)
     {
         _exerciseListViewModel = exerciseListViewModel;

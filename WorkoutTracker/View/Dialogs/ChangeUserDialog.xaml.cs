@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WorkoutTracker.ViewModel;
 
 namespace WorkoutTracker.View.Dialogs
 {
@@ -19,10 +20,11 @@ namespace WorkoutTracker.View.Dialogs
     /// </summary>
     public partial class ChangeUserDialog : Window
     {
-        public ChangeUserDialog(Window owner)
+        public ChangeUserDialog(Window owner, MainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
             Owner = owner;
+            DataContext = mainWindowViewModel;
         }
     }
 }

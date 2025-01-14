@@ -3,11 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs"
+        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="ChangeUserDialog" Height="250" Width="200"
+        Title="Select User" Height="250" Width="200"
         WindowStartupLocation="CenterOwner">
-    <Grid>
+    <Grid VerticalAlignment="Center">
         
+        <ComboBox 
+            ItemsSource="{Binding UserVM.Users}"
+            SelectedItem="{Binding UserVM.SelectedUser, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding UserName}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
     </Grid>
 </Window>

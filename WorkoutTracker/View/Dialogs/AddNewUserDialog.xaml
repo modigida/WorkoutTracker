@@ -3,11 +3,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs"
+        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="AddNewUserDialog" Height="250" Width="200"
+        Title="Create User" Height="250" Width="200"
         WindowStartupLocation="CenterOwner">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <ListView
+                ItemsSource="{Binding UserVM.User.FavoriteExercises}" 
+                SelectedItem="{Binding UserVM.SelectedExercise, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ExerciseName}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ComboBox ItemsSource="{Binding UserVM.AvailableExercises}" >
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ExerciseName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
     </Grid>
 </Window>
