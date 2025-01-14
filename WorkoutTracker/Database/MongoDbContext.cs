@@ -2,13 +2,13 @@
 using WorkoutTracker.Model;
 
 namespace WorkoutTracker.Database;
-public class MongoDbContext
+public class IMongoDbContext
 {
     private readonly IMongoDatabase _database;
 
     private readonly string _connectionString = "mongodb://localhost:27017";
     private readonly string _databaseName = "IdaModigh";
-    public MongoDbContext()
+    public IMongoDbContext()
     {
         var client = new MongoClient(_connectionString);
 

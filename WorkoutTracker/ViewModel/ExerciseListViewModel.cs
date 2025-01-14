@@ -1,11 +1,18 @@
 ﻿using System.Collections.ObjectModel;
 using WorkoutTracker.Model;
+using WorkoutTracker.Repository;
 
 namespace WorkoutTracker.ViewModel;
 public class ExerciseListViewModel : BaseViewModel
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
-    public ObservableCollection<Exercise> Exercises { get; set; }
+    private readonly ExerciseRepository _exerciseRepository;
+    private ObservableCollection<Exercise> _exercises;
+    public ObservableCollection<Exercise> Exercises 
+    {
+        get => _exercises;
+        set => SetProperty(ref _exercises, value);
+    }
     private Exercise? _selectedExercise;
     public Exercise? SelectedExercise 
     { 
@@ -21,26 +28,39 @@ public class ExerciseListViewModel : BaseViewModel
             }
         }
     }
-    public ExerciseListViewModel(MainWindowViewModel mainWindowViewModel)
+    public ExerciseListViewModel(MainWindowViewModel mainWindowViewModel, ExerciseRepository exerciseRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
+        _exerciseRepository = exerciseRepository;
 
-        Exercises = new ObservableCollection<Exercise>
-        {
-            new Exercise
-            {
-                ExerciseName = "Deadlift",
-                Description = "Lift a bar with weight",
-                MuscleGroups = new List<string> { "Back" },
-                IsFavorite = false
-            },
-            new Exercise
-            {
-                ExerciseName = "Squat",
-                Description = "Squat with weight on your shoulders",
-                MuscleGroups = new List<string> { "Legs" },
-                IsFavorite = true
-            } 
-        };
+        //GetExercises();
+    }
+    public async Task GetExercises()
+    {
+        //Exercises = new ObservableCollection<Exercise>
+        //{
+        //    new Exercise
+        //    {
+        //        ExerciseName = "Deadlift",
+        //        Description = "Lift a bar with weight",
+        //        MuscleGroups = new List<string> { "Back" },
+        //        IsFavorite = false
+        //    },
+        //    new Exercise
+        //    {
+        //        ExerciseName = "Squat",
+        //        Description = "Squat with weight on your shoulders",
+        //        MuscleGroups = new List<string> { "Legs" },
+        //        IsFavorite = true
+        //    } 
+        //};
+
+       // var exercises = _exerciseRepository.GetAllAsync().Result;
+       // Exercises = new ObservableCollection<Exercise>(exercises);
+
+
+        var exerciseNames = await _exerciseRepository.GetAllExerciseNamesAsync();
+        var exercises = exerciseNames.Select(name => new Exercise { ExerciseName = name }).ToList();
+        Exercises = new ObservableCollection<Exercise>(exercises);
     }
 }

@@ -2,11 +2,15 @@
 using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Model;
+using WorkoutTracker.Repository;
 
 namespace WorkoutTracker.ViewModel;
 public class ExerciseDetailsViewModel : BaseViewModel
 {
     private readonly ExerciseListViewModel _exerciseListViewModel;
+    private readonly MuscleGroupRepository _muscleGroupRepository;
+    private readonly ExerciseRepository _exerciseRepository;
+
     public Exercise _exercise;
     public Exercise Exercise 
     {
@@ -14,23 +18,17 @@ public class ExerciseDetailsViewModel : BaseViewModel
         set => SetProperty(ref _exercise, value);
     }
     public ObservableCollection<MuscleGroup> MuscleGroups { get; set; }
-    private string _insertedMuscleGroup;
-    public string InsertedMuscleGroup 
+    private ObservableCollection<MuscleGroup> _availableMuscleGroups;
+    public ObservableCollection<MuscleGroup> AvailableMuscleGroups
     {
-        get => _insertedMuscleGroup;
-        set => SetProperty(ref _insertedMuscleGroup, value);
+        get => _availableMuscleGroups;
+        set => SetProperty(ref _availableMuscleGroups, value);
     }
     private MuscleGroup _selectedMuscleGroup;
     public MuscleGroup SelectedMuscleGroup
     {
         get => _selectedMuscleGroup;
-        set
-        {
-            if (SetProperty(ref _selectedMuscleGroup, value))
-            {
-                InsertedMuscleGroup = _selectedMuscleGroup.MuscleGroupName ?? string.Empty;
-            }
-        }
+        set => SetProperty(ref _selectedMuscleGroup, value);
     }
     private bool _isFavoriteExercise;
     public bool IsFavoriteExercise
@@ -48,14 +46,15 @@ public class ExerciseDetailsViewModel : BaseViewModel
     public ICommand IsFavoriteExerciseCommand { get; }
     public ICommand AddMuscleGroupCommand { get; }
     public ICommand DeleteMuscleGroupCommand { get; }
-    public ExerciseDetailsViewModel(ExerciseListViewModel exerciseListViewModel)
+    public ExerciseDetailsViewModel(ExerciseListViewModel exerciseListViewModel, MuscleGroupRepository muscleGroupRepository, ExerciseRepository exerciseRepository)
     {
         _exerciseListViewModel = exerciseListViewModel;
+        _muscleGroupRepository = muscleGroupRepository;
+        _exerciseRepository = exerciseRepository;
 
-        GetMuscleGroups();
+        AvailableMuscleGroups = new ObservableCollection<MuscleGroup>();
 
         GetExercise();
-        
 
         SyncFavoriteStatus();
 
@@ -64,11 +63,13 @@ public class ExerciseDetailsViewModel : BaseViewModel
         DeleteMuscleGroupCommand = new RelayCommand(DeleteMuscleGroup);
     }
 
-    public void GetExercise(Exercise selectedExercise = null)
+    public async void GetExercise(Exercise selectedExercise = null)
     {
         if (selectedExercise != null)
         {
-            Exercise = selectedExercise;
+            Exercise = await _exerciseRepository.GetByNameAsync(selectedExercise.ExerciseName);
+
+            FilterAvailableMuscleGroups();
         }
         else
         {
@@ -81,30 +82,32 @@ public class ExerciseDetailsViewModel : BaseViewModel
             };
         }
     }
-
     private void DeleteMuscleGroup(object obj)
     {
-        // Delete MuscleGroup from Exercise
+        Exercise.MuscleGroups.Remove(SelectedMuscleGroup.MuscleGroupName);
+        FilterAvailableMuscleGroups();
     }
-    private void GetMuscleGroups()
+    public async Task GetMuscleGroups()
     {
-        // Get muscle groups from database
-        MuscleGroups = new ObservableCollection<MuscleGroup>
-        {
-            new MuscleGroup { MuscleGroupName = "Chest" },
-            new MuscleGroup { MuscleGroupName = "Back" },
-            new MuscleGroup { MuscleGroupName = "Shoulders" },
-            new MuscleGroup { MuscleGroupName = "Biceps" },
-            new MuscleGroup { MuscleGroupName = "Triceps" },
-            new MuscleGroup { MuscleGroupName = "Abdominals" },
-            new MuscleGroup { MuscleGroupName = "Lower Back" },
-            new MuscleGroup { MuscleGroupName = "Legs" },
-            new MuscleGroup { MuscleGroupName = "Calves" }
-        };
+        var muscleGroups = await _muscleGroupRepository.GetAllAsync();
+        MuscleGroups = new ObservableCollection<MuscleGroup>(muscleGroups);
     }
     private void AddMuscleGroup(object obj)
     {
         Exercise.MuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
+        FilterAvailableMuscleGroups();
+    }
+    private void FilterAvailableMuscleGroups()
+    {
+        AvailableMuscleGroups.Clear();
+
+        foreach (var muscleGroup in MuscleGroups)
+        {
+            if (Exercise.MuscleGroups != null &&  !Exercise.MuscleGroups.Any(m => m.Equals(muscleGroup.MuscleGroupName)))
+            {
+                AvailableMuscleGroups.Add(muscleGroup);
+            }
+        }
     }
     private void SyncFavoriteStatus()
     {

@@ -75,13 +75,13 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand OpenWorkoutListCommand { get; }
     public ICommand OpenWorkoutCommand { get; }
     public ICommand OpenOptionsMenuCommand { get; }
-    public MainWindowViewModel(MongoDbContext dbContext)
+    public MainWindowViewModel(IMongoDbContext dbContext)
     {
         IsStartVisible = true;
         StartText = "Choose a user to start";
 
-        ExerciseDetailsVM = new ExerciseDetailsViewModel(new ExerciseListViewModel(this));
-        ExerciseListVM = new ExerciseListViewModel(this);
+        ExerciseListVM = new ExerciseListViewModel(this, new ExerciseRepository(dbContext));
+        ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext));
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this, new UserRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel();
@@ -113,14 +113,16 @@ public class MainWindowViewModel : BaseViewModel
 
         setVisible();
     }
-    public void OpenExerciseDetails(object obj)
+    public async void OpenExerciseDetails(object obj)
     {
+        await ExerciseDetailsVM.GetMuscleGroups();
         ExerciseDetailsVM.GetExercise(ExerciseListVM.SelectedExercise);
         SetViewVisibility(() => IsExerciseDetailsVisible = true);
         ExerciseListVM.SelectedExercise = null;
     }
-    private void OpenExerciseList(object obj)
+    private async void OpenExerciseList(object obj)
     {
+        await ExerciseListVM.GetExercises();
         SetViewVisibility(() => IsExerciseListVisible = true);
     }
     private void OpenStatistics(object obj)
