@@ -1,9 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
-using System.Printing;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using WorkoutTracker.Commands;
-using WorkoutTracker.Model;
 
 namespace WorkoutTracker.ViewModel;
 public class MainWindowViewModel : BaseViewModel
@@ -57,7 +53,18 @@ public class MainWindowViewModel : BaseViewModel
         get => _isWorkoutVisible;
         set => SetProperty(ref _isWorkoutVisible, value);
     }
-    public string StartText { get; set; }
+    private bool _isOptionsMenuOpen;
+    public bool IsOptionsMenuOpen
+    {
+        get => _isOptionsMenuOpen;
+        set => SetProperty(ref _isOptionsMenuOpen, value);
+    }
+    private string _startText;
+    public string StartText 
+    {
+        get => _startText;
+        set => SetProperty(ref _startText, value);
+    }
 
     public ICommand OpenExerciseDetailsCommand { get; }
     public ICommand OpenExerciseListCommand { get; }
@@ -65,6 +72,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand OpenUserCommand { get; }
     public ICommand OpenWorkoutListCommand { get; }
     public ICommand OpenWorkoutCommand { get; }
+    public ICommand OpenOptionsMenuCommand { get; }
     public MainWindowViewModel()
     {
         IsStartVisible = true;
@@ -83,6 +91,12 @@ public class MainWindowViewModel : BaseViewModel
         OpenUserCommand = new RelayCommand(OpenUser);
         OpenWorkoutListCommand = new RelayCommand(OpenWorkoutList);
         OpenWorkoutCommand = new RelayCommand(OpenWorkout);
+        OpenOptionsMenuCommand = new RelayCommand(OpenOptionsMenu);
+    }
+
+    private void OpenOptionsMenu(object obj)
+    {
+        IsOptionsMenuOpen = !IsOptionsMenuOpen;
     }
 
     private void SetViewVisibility(Action setVisible)
@@ -99,12 +113,8 @@ public class MainWindowViewModel : BaseViewModel
     }
     public void OpenExerciseDetails(object obj)
     {
-        // If added button is pressed = open details page to create new exercise
-        // If existing exercise is pressed = open details page to edit exercise
         ExerciseDetailsVM.GetExercise(ExerciseListVM.SelectedExercise);
-        
         SetViewVisibility(() => IsExerciseDetailsVisible = true);
-
         ExerciseListVM.SelectedExercise = null;
     }
     private void OpenExerciseList(object obj)

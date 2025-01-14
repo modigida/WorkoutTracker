@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using WorkoutTracker.Commands;
 using WorkoutTracker.Model;
 
 namespace WorkoutTracker.ViewModel;

@@ -30,7 +30,18 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding UserVM.User.UserName}" Grid.Column="0" HorizontalAlignment="Left" FontSize="16" Margin="5,0,0,0"/>
+
+            <StackPanel>
+                <ToggleButton x:Name="OptionsButton" Content="{Binding UserVM.User.UserName}" Command="{Binding OpenOptionsMenuCommand}" />
+                <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
+                    <StackPanel Background="Gray">
+                        <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Add New User" Command="{Binding UserVM.AddNewUserCommand}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" HorizontalContentAlignment="Left"/>
+                    </StackPanel>
+                </Popup>
+            </StackPanel>
+            
             <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" HorizontalAlignment="Right"/>
             <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
         </Grid>
