@@ -14,7 +14,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Black" />
 
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <ListView
@@ -34,5 +34,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
+
+        <Button Content="Save user" Command="{Binding UserVM.SaveAddNewUserCommand}" Grid.Row="2" />
     </Grid>
 </Window>

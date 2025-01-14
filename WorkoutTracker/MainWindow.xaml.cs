@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WorkoutTracker.Database;
 using WorkoutTracker.ViewModel;
 
 namespace WorkoutTracker
@@ -21,7 +22,8 @@ namespace WorkoutTracker
         {
             InitializeComponent();
 
-            DataContext = new MainWindowViewModel();
+            var dbContext = new MongoDbContext();
+            DataContext = new MainWindowViewModel(dbContext);
         }
     }
 }

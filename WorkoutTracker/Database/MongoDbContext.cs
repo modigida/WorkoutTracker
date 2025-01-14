@@ -1,61 +1,116 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using WorkoutTracker.Model;
 
 namespace WorkoutTracker.Database;
-public class MongoDbContext : DbContext
+public class MongoDbContext
 {
-    public DbSet<User> Users { get; set; }
-    public DbSet<Exercise> Exercises { get; set; }
-    public DbSet<PersonalRecord> PersonalRecords { get; set; }
-    public DbSet<Workout> Workouts { get; set; }
+    private readonly IMongoDatabase _database;
 
     private readonly string _connectionString = "mongodb://localhost:27017";
     private readonly string _databaseName = "IdaModigh";
-
     public MongoDbContext()
     {
-        EnsureDatabaseExists();
-    }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseMongoDB(_connectionString, _databaseName);
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<User>().HasKey(u => u.Id);
-        modelBuilder.Entity<Exercise>().HasKey(e => e.Id);
-        modelBuilder.Entity<PersonalRecord>().HasKey(pr => pr.Id);
-        modelBuilder.Entity<Workout>().HasKey(w => w.Id);
-
-        modelBuilder.Entity<User>()
-            .HasMany(u => u.FavoriteExercises)
-            .WithOne()
-            .HasForeignKey("UserId");
-    }
-
-    private void EnsureDatabaseExists()
-    {
-        // Skapa MongoDB-klienten
         var client = new MongoClient(_connectionString);
-        var database = client.GetDatabase(_databaseName);
 
-        // Kontrollera om databasen finns (kontrollerar om det finns en samling)
-        var collections = database.ListCollectionNames().ToList();
-        if (!collections.Any())
-        {
-            // Skapa en standardinsamling om ingen finns (triggar MongoDB att skapa databasen)
-            database.CreateCollection("InitialCollection");
+        var databaseNames = client.ListDatabaseNames().ToList();
 
-            Console.WriteLine($"Databasen '{_databaseName}' skapades.");
-            // TODO: Run method creating exercises in Exercises collection
-        }
-        else
+        _database = client.GetDatabase(_databaseName);
+
+        EnsureDatabaseSetup();
+    }
+    public IMongoCollection<T> GetCollection<T>(string collectionName)
+    {
+        return _database.GetCollection<T>(collectionName);
+    }
+    public void EnsureDatabaseSetup()
+    {
+        var collectionNames = _database.ListCollectionNames().ToList();
+
+        if (!collectionNames.Contains("Users"))
         {
-            Console.WriteLine($"Databasen '{_databaseName}' finns redan.");
+            _database.CreateCollection("Users");
         }
+
+        if (!collectionNames.Contains("Exercises"))
+        {
+            _database.CreateCollection("Exercises");
+            AddInitialExercises();
+        }
+
+        if (!collectionNames.Contains("Workouts"))
+        {
+            _database.CreateCollection("Workouts");
+        }
+
+        if (!collectionNames.Contains("PersonalRecords"))
+        {
+            _database.CreateCollection("PersonalRecords");
+        }
+
+        if (!collectionNames.Contains("MuscleGroups"))
+        {
+            _database.CreateCollection("MuscleGroups");
+            AddMuscleGroups();
+        }
+    }
+    private void AddInitialExercises()
+    {
+        var usersCollection = GetCollection<Exercise>("Exercises");
+        usersCollection.InsertMany(new List<Exercise>
+        {
+            new Exercise
+            {
+                ExerciseName = "Bench Press",
+                Description = "Press a barbell upward while lying on a bench.",
+                MuscleGroups = new List<string> { "Chest", "Triceps", "Shoulders" },
+                IsFavorite = true
+            },
+            new Exercise
+            {
+                ExerciseName = "Deadlift",
+                Description = "Lift a barbell from the ground to a standing position.",
+                MuscleGroups = new List<string> { "Back", "Legs", "Glutes" },
+                IsFavorite = false
+            },
+            new Exercise
+            {
+                ExerciseName = "Squat",
+                Description = "Perform a deep knee bend with a barbell on your shoulders.",
+                MuscleGroups = new List<string> { "Legs", "Glutes", "Core" },
+                IsFavorite = true
+            },
+            new Exercise
+            {
+                ExerciseName = "Pull-Up",
+                Description = "Pull yourself up until your chin is above a bar.",
+                MuscleGroups = new List<string> { "Back", "Biceps", "Shoulders" },
+                IsFavorite = false
+            },
+            new Exercise
+            {
+                ExerciseName = "Overhead Press",
+                Description = "Press a barbell upward from shoulder height.",
+                MuscleGroups = new List<string> { "Shoulders", "Triceps", "Core" },
+                IsFavorite = true
+            }
+        });
+    }
+    private void AddMuscleGroups()
+    {
+        var usersCollection = GetCollection<MuscleGroup>("MuscleGroups");
+        usersCollection.InsertMany(new List<MuscleGroup>
+        {
+            new MuscleGroup { MuscleGroupName = "Chest" },
+            new MuscleGroup { MuscleGroupName = "Back" },
+            new MuscleGroup { MuscleGroupName = "Shoulders" },
+            new MuscleGroup { MuscleGroupName = "Biceps" },
+            new MuscleGroup { MuscleGroupName = "Triceps" },
+            new MuscleGroup { MuscleGroupName = "Abdominals" },
+            new MuscleGroup { MuscleGroupName = "Lower Back" },
+            new MuscleGroup { MuscleGroupName = "Legs" },
+            new MuscleGroup { MuscleGroupName = "Calves" },
+            new MuscleGroup { MuscleGroupName = "Glutes" },
+            new MuscleGroup { MuscleGroupName = "Core" }
+        });
     }
 }

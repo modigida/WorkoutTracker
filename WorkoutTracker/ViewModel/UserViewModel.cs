@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Model;
+using WorkoutTracker.Repository;
 using WorkoutTracker.View.Dialogs;
 
 namespace WorkoutTracker.ViewModel;
@@ -12,6 +13,7 @@ public class UserViewModel : BaseViewModel
     private readonly MainWindowViewModel _mainWindowViewModel;
     private ChangeUserDialog changeUser;
     private AddNewUserDialog addNewUser;
+    private readonly UserRepository _userRepository;
 
 
 
@@ -59,20 +61,16 @@ public class UserViewModel : BaseViewModel
     public User NewUser
     {
         get => _newUser;
-        set
-        {
-            if (SetProperty(ref _newUser, value))
-            {
-                SaveAddNewUser();
-            }
-        }
+        set => SetProperty(ref _newUser, value);
     }
     public ICommand ChangeUserCommand { get; }
     public ICommand AddNewUserCommand { get; }
+    public ICommand SaveAddNewUserCommand { get; }
     public ICommand LogoutCommand { get; }
-    public UserViewModel(MainWindowViewModel mainWindowViewModel)
+    public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
+        _userRepository = userRepository;
 
         GetExercises();
 
@@ -86,6 +84,7 @@ public class UserViewModel : BaseViewModel
 
         ChangeUserCommand = new RelayCommand(ChangeUser);
         AddNewUserCommand = new RelayCommand(AddNewUser);
+        SaveAddNewUserCommand = new RelayCommand(SaveAddNewUser);
         LogoutCommand = new RelayCommand(Logout);
     }
 
@@ -145,10 +144,11 @@ public class UserViewModel : BaseViewModel
         addNewUser.ShowDialog();
         _mainWindowViewModel.IsOptionsMenuOpen = false;
     }
-    private void SaveAddNewUser()
+    private async void SaveAddNewUser(object obj)
     {
         // Save new user to database
         User = NewUser;
+        await _userRepository.CreateAsync(User);
         _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
         addNewUser.Close();
     }

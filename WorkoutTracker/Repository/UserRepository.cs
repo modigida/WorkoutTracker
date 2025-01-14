@@ -1,51 +1,33 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MongoDB.Driver;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;
 
 namespace WorkoutTracker.Repository;
 public class UserRepository
 {
-    private readonly MongoDbContext _dbContext;
-
-    public UserRepository(MongoDbContext dbContext)
+    private readonly IMongoCollection<User> _users;
+    public UserRepository(MongoDbContext context)
     {
-        _dbContext = dbContext;
+        _users = context.GetCollection<User>("Users");
     }
-
-    // Skapa en ny användare
-    public async Task CreateUserAsync(User user)
+    public async Task<List<User>> GetAllAsync()
     {
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
+        return await _users.Find(_ => true).ToListAsync();
     }
-
-    // Hämta alla användare
-    public async Task<List<User>> GetAllUsersAsync()
+    public async Task<User> GetByIdAsync(string id)
     {
-        return await _dbContext.Users.ToListAsync();
+        return await _users.Find(user => user.Id == id).FirstOrDefaultAsync();
     }
-
-    // Hämta en specifik användare via ID
-    public async Task<User> GetUserByIdAsync(string id)
+    public async Task CreateAsync(User user)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        await _users.InsertOneAsync(user);
     }
-
-    // Uppdatera en användare
-    public async Task UpdateUserAsync(User user)
+    public async Task UpdateAsync(string id, User updatedUser)
     {
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync();
+        await _users.ReplaceOneAsync(user => user.Id == id, updatedUser);
     }
-
-    // Ta bort en användare
-    public async Task DeleteUserAsync(string id)
+    public async Task DeleteAsync(string id)
     {
-        var user = await GetUserByIdAsync(id);
-        if (user != null)
-        {
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
-        }
+        await _users.DeleteOneAsync(user => user.Id == id);
     }
 }

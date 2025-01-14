@@ -1,5 +1,7 @@
 ﻿using System.Windows.Input;
 using WorkoutTracker.Commands;
+using WorkoutTracker.Database;
+using WorkoutTracker.Repository;
 
 namespace WorkoutTracker.ViewModel;
 public class MainWindowViewModel : BaseViewModel
@@ -73,7 +75,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand OpenWorkoutListCommand { get; }
     public ICommand OpenWorkoutCommand { get; }
     public ICommand OpenOptionsMenuCommand { get; }
-    public MainWindowViewModel()
+    public MainWindowViewModel(MongoDbContext dbContext)
     {
         IsStartVisible = true;
         StartText = "Choose a user to start";
@@ -81,7 +83,7 @@ public class MainWindowViewModel : BaseViewModel
         ExerciseDetailsVM = new ExerciseDetailsViewModel(new ExerciseListViewModel(this));
         ExerciseListVM = new ExerciseListViewModel(this);
         StatisticsVM = new StatisticsViewModel();
-        UserVM = new UserViewModel(this);
+        UserVM = new UserViewModel(this, new UserRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel();
         WorkoutVM = new WorkoutViewModel();
 
