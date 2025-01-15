@@ -113,6 +113,10 @@ public class MainWindowViewModel : BaseViewModel
 
         setVisible();
     }
+    public void OpenStartView()
+    {
+        SetViewVisibility(() => IsStartVisible = true);
+    }
     public async void OpenExerciseDetails(object obj)
     {
         await ExerciseDetailsVM.GetMuscleGroups();
@@ -129,7 +133,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         SetViewVisibility(() => IsStatisticsVisible = true);
     }
-    private void OpenUser(object obj)
+    private async void OpenUser(object obj)
     {
         SetViewVisibility(() => IsUserVisible = true);
     }

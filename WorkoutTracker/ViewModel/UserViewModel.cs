@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Security.Cryptography.Xml;
 using System.Windows;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
@@ -17,46 +15,71 @@ public class UserViewModel : BaseViewModel
     private AddNewUserDialog addNewUser;
     private readonly UserRepository _userRepository;
 
-
-
     private User _user;
-    public User User 
+    public User User
     {
         get => _user;
         set => SetProperty(ref _user, value);
     }
-    public ObservableCollection<User> Users { get; set; }
-    public ObservableCollection<Exercise> Exercises { get; set; }
+    private ObservableCollection<User> _users;
+    public ObservableCollection<User> Users
+    {
+        get => _users;
+        set => SetProperty(ref _users, value);
+    }
+    public ObservableCollection<FavoriteExercise> Exercises { get; set; }
 
-    private ObservableCollection<Exercise> _availableExercises;
-    public ObservableCollection<Exercise> AvailableExercises
+    private ObservableCollection<FavoriteExercise> _availableExercises;
+    public ObservableCollection<FavoriteExercise> AvailableExercises
     {
         get => _availableExercises;
         set => SetProperty(ref _availableExercises, value);
     }
+
+    // ChangeUserDialog
     private User _selectedUser;
     public User SelectedUser
     {
         get => _selectedUser;
         set
         {
-            if(SetProperty(ref _selectedUser, value))
+            if (SetProperty(ref _selectedUser, value))
             {
-                SaveChangeUser();
+                if (SelectedUser != null)
+                {
+                    SaveChangeUser();
+                }
             }
         }
     }
-    private Exercise _selectedExercise;
-    public Exercise SelectedExercise
+
+    // AddNewUserDialog
+    private string _addedFavoriteExercise;
+    public string AddedFavoriteExercise
     {
-        get => _selectedExercise;
+        get => _addedFavoriteExercise;
+        set => SetProperty(ref _addedFavoriteExercise, value);
+    }
+    private FavoriteExercise _selectedFavoriteExercise;
+    public FavoriteExercise SelectedFavoriteExercise
+    {
+        get => _selectedFavoriteExercise;
         set
         {
-            if (SetProperty(ref _selectedExercise, value))
+            if (SetProperty(ref _selectedFavoriteExercise, value))
             {
-                AddFavoriteExercise();
+                if (SelectedFavoriteExercise != null)
+                {
+                    AddedFavoriteExercise = SelectedFavoriteExercise.ExerciseName;
+                }
             }
         }
+    }
+    private double _targetWeight;
+    public double TargetWeight
+    {
+        get => _targetWeight;
+        set => SetProperty(ref _targetWeight, value);
     }
 
     private User _newUser;
@@ -65,8 +88,16 @@ public class UserViewModel : BaseViewModel
         get => _newUser;
         set => SetProperty(ref _newUser, value);
     }
+    private ObservableCollection<FavoriteExercise> _favoriteExercises;
+    public ObservableCollection<FavoriteExercise> FavoriteExercises
+    {
+        get => _favoriteExercises;
+        set => SetProperty(ref _favoriteExercises, value);
+    }
     public ICommand ChangeUserCommand { get; }
     public ICommand AddNewUserCommand { get; }
+    public ICommand AddFavoriteExerciseCommand { get; }
+    public ICommand DeleteFavoriteExerciseCommand { get; }
     public ICommand SaveAddNewUserCommand { get; }
     public ICommand LogoutCommand { get; }
     public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository, ExerciseRepository exerciseRepository)
@@ -80,59 +111,81 @@ public class UserViewModel : BaseViewModel
             UserName = "modigIda",
             DateJoined = DateTime.Now
         };
-        
+
         mainWindowViewModel.StartText = $"{User.UserName} is logged in";
 
         ChangeUserCommand = new RelayCommand(ChangeUser);
         AddNewUserCommand = new RelayCommand(AddNewUser);
+        AddFavoriteExerciseCommand = new RelayCommand(AddNewUserFavoriteExercise);
+        DeleteFavoriteExerciseCommand = new RelayCommand<FavoriteExercise>(async favoriteExercise => await DeleteFavoriteExercise(favoriteExercise));
         SaveAddNewUserCommand = new RelayCommand(SaveAddNewUser);
         LogoutCommand = new RelayCommand(Logout);
     }
     private async Task GetExercises()
     {
         var exerciseNames = await _exerciseRepository.GetAllExerciseNamesAsync();
-        var exercises = exerciseNames.Select(name => new Exercise { ExerciseName = name }).ToList();
-        Exercises = new ObservableCollection<Exercise>(exercises);
-        
+        var exercises = exerciseNames.Select(name => new FavoriteExercise { ExerciseName = name }).ToList();
+        Exercises = new ObservableCollection<FavoriteExercise>(exercises);
+
         FilterAvailableExercises();
     }
     private void FilterAvailableExercises()
     {
         if (AvailableExercises == null)
         {
-            AvailableExercises = new ObservableCollection<Exercise>();
+            AvailableExercises = new ObservableCollection<FavoriteExercise>();
+        }
+        if (FavoriteExercises == null)
+        {
+            FavoriteExercises = new ObservableCollection<FavoriteExercise>();
         }
 
         AvailableExercises.Clear();
 
         foreach (var exercise in Exercises)
         {
-            if (User.FavoriteExercises != null && !User.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
+            if (NewUser.FavoriteExercises == null && User.FavoriteExercises != null && !User.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
             {
                 AvailableExercises.Add(exercise);
             }
-            if (NewUser.FavoriteExercises != null && !NewUser.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
+            if (FavoriteExercises != null && !FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
             {
                 AvailableExercises.Add(exercise);
             }
         }
     }
-    private void AddFavoriteExercise()
+    private void AddNewUserFavoriteExercise(object obj)
     {
-        if (User.FavoriteExercises == null)
+        if (FavoriteExercises == null)
         {
-            User.FavoriteExercises = new List<FavoriteExercise>();
+            FavoriteExercises = new ObservableCollection<FavoriteExercise>();
         }
-        User.FavoriteExercises.Add(new FavoriteExercise
+
+        if (AddedFavoriteExercise != null)
         {
-            ExerciseName = SelectedExercise.ExerciseName,
-            TargetWeight = 0 
-        });
+            AddedFavoriteExercise = SelectedFavoriteExercise.ExerciseName;
+
+            FavoriteExercises.Add(new FavoriteExercise
+            {
+                ExerciseName = AddedFavoriteExercise,
+                TargetWeight = TargetWeight
+            });
+        }
+
+        TargetWeight = 0;
+
+        FilterAvailableExercises();
+    }
+    private async Task DeleteFavoriteExercise(FavoriteExercise favoriteExercise)
+    {
+        if (favoriteExercise != null)
+        {
+            FavoriteExercises.Remove(favoriteExercise);
+        }
         FilterAvailableExercises();
     }
     private async void GetUsers()
     {
-        // Get Users from database
         var users = await _userRepository.GetAllAsync();
         Users = new ObservableCollection<User>(users);
     }
@@ -147,6 +200,7 @@ public class UserViewModel : BaseViewModel
     {
         User = SelectedUser;
         _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
+        SelectedUser = null;
         changeUser.Close();
     }
     private async void AddNewUser(object obj)
@@ -165,14 +219,18 @@ public class UserViewModel : BaseViewModel
     {
         User = NewUser;
         User.DateJoined = DateTime.Now;
+        User.FavoriteExercises = new List<FavoriteExercise>(FavoriteExercises);
         await _userRepository.CreateAsync(User);
         _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
+        NewUser = null;
+        FavoriteExercises.Clear();
         addNewUser.Close();
     }
     private void Logout(object obj)
     {
-        User = null;
+        User = new User { UserName = "Offline" };
         _mainWindowViewModel.StartText = "Choose a user to start";
+        _mainWindowViewModel.OpenStartView();
         _mainWindowViewModel.IsOptionsMenuOpen = false;
     }
 }

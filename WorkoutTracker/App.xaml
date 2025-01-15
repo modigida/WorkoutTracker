@@ -18,7 +18,7 @@
         <Style TargetType="ListView">
             <Setter Property="Background" Value="{StaticResource GlobalBackgroundColor}"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}"/>
         </Style>
 
         <Style TargetType="TextBlock">
@@ -46,6 +46,8 @@
 
         <Style TargetType="ComboBoxItem">
             <Setter Property="Background" Value="Gray"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="CheckBox">

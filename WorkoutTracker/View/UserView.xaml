@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkoutTracker.View"
+             xmlns:local="clr-namespace:WorkoutTracker.View" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
     <Grid>
@@ -23,13 +23,22 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Center">
             <TextBlock Text="Goals" FontSize="24"/>
-            <ListView FontSize="24">
-                <ListViewItem>
-                    <TextBlock>Squat 60 kg</TextBlock>
-                </ListViewItem>
-                <ListViewItem>
-                    <TextBlock>Deadlift 80 kg</TextBlock>
-                </ListViewItem>
+            <ListView FontSize="24" DataContext="{Binding UserVM}" ItemsSource="{Binding User.FavoriteExercises}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding ExerciseName}"/>
+                            <TextBlock Text="{Binding TargetWeight}" Grid.Column="1"/>
+                            <Button Content="D" Grid.Column="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="ComboBox with available exercises" FontSize="24" Margin="0,0,10,0"/>
