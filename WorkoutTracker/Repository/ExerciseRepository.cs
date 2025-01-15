@@ -6,7 +6,7 @@ namespace WorkoutTracker.Repository;
 public class ExerciseRepository
 {
     private readonly IMongoCollection<Exercise> _exercises;
-    public ExerciseRepository(IMongoDbContext context)
+    public ExerciseRepository(MongoDbContext context)
     {
         _exercises = context.GetCollection<Exercise>("Exercises");
     }

@@ -35,7 +35,8 @@
         <Style TargetType="Button">
             <Setter Property="Background" Value="{StaticResource GlobalBackgroundColor}"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
-            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="Padding" Value="5" />
         </Style>
 
         <Style TargetType="ComboBox">

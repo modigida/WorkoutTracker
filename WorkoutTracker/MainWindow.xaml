@@ -55,6 +55,7 @@
         <view:UserView Grid.Row="1" Visibility="{Binding IsUserVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:WorkoutListView Grid.Row="1" Visibility="{Binding IsWorkoutListVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:WorkoutView Grid.Row="1" Visibility="{Binding IsWorkoutVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:WorkoutDetailsView Grid.Row="1" Visibility="{Binding IsWorkoutDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
         <Grid Grid.Row="2" Background="Gray">
             <Grid.ColumnDefinitions>

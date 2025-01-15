@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Database;
+using WorkoutTracker.Model;
 using WorkoutTracker.Repository;
 
 namespace WorkoutTracker.ViewModel;
@@ -12,6 +13,7 @@ public class MainWindowViewModel : BaseViewModel
     public UserViewModel UserVM { get; set; }
     public WorkoutListViewModel WorkoutListVM { get; set; }
     public WorkoutViewModel WorkoutVM { get; set; }
+    public WorkoutDetailsViewModel WorkoutDetailsVM { get; set; }
 
     private bool _isStartVisible;
     public bool IsStartVisible
@@ -55,6 +57,13 @@ public class MainWindowViewModel : BaseViewModel
         get => _isWorkoutVisible;
         set => SetProperty(ref _isWorkoutVisible, value);
     }
+    
+    private bool _isWorkoutDetailsVisible;
+    public bool IsWorkoutDetailsVisible
+    {
+        get => _isWorkoutDetailsVisible;
+        set => SetProperty(ref _isWorkoutDetailsVisible, value);
+    }
     private bool _isOptionsMenuOpen;
     public bool IsOptionsMenuOpen
     {
@@ -75,7 +84,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand OpenWorkoutListCommand { get; }
     public ICommand OpenWorkoutCommand { get; }
     public ICommand OpenOptionsMenuCommand { get; }
-    public MainWindowViewModel(IMongoDbContext dbContext)
+    public MainWindowViewModel(MongoDbContext dbContext)
     {
         IsStartVisible = true;
         StartText = "Choose a user to start";
@@ -84,8 +93,9 @@ public class MainWindowViewModel : BaseViewModel
         ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext));
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext));
-        WorkoutListVM = new WorkoutListViewModel();
-        WorkoutVM = new WorkoutViewModel();
+        WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext));
+        WorkoutVM = new WorkoutViewModel(this);
+        WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext));
 
         OpenExerciseDetailsCommand = new RelayCommand(OpenExerciseDetails);
         OpenExerciseListCommand = new RelayCommand(OpenExerciseList);
@@ -110,6 +120,7 @@ public class MainWindowViewModel : BaseViewModel
         IsUserVisible = false;
         IsWorkoutListVisible = false;
         IsWorkoutVisible = false;
+        IsWorkoutDetailsVisible = false;
 
         setVisible();
     }
@@ -133,16 +144,23 @@ public class MainWindowViewModel : BaseViewModel
     {
         SetViewVisibility(() => IsStatisticsVisible = true);
     }
-    private async void OpenUser(object obj)
+    private void OpenUser(object obj)
     {
         SetViewVisibility(() => IsUserVisible = true);
     }
-    private void OpenWorkoutList(object obj)
+    private async void OpenWorkoutList(object obj)
     {
+        await WorkoutListVM.GetAllWorkouts(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutListVisible = true);
     }
     private void OpenWorkout(object obj)
     {
+        WorkoutVM.StartNewWorkout(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutVisible = true);
+    }
+    public async void OpenWorkoutDetails(Workout workout)
+    {
+        await WorkoutDetailsVM.GetWorkout(workout);
+        SetViewVisibility(() => IsWorkoutDetailsVisible = true);
     }
 }

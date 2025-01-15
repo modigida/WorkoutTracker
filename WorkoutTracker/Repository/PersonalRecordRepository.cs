@@ -3,7 +3,7 @@
 namespace WorkoutTracker.Repository;
 public class PersonalRecordRepository
 {
-    public PersonalRecordRepository(IMongoDbContext context)
+    public PersonalRecordRepository(MongoDbContext context)
     {
         
     }

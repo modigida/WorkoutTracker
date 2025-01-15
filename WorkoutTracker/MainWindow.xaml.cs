@@ -22,7 +22,7 @@ namespace WorkoutTracker
         {
             InitializeComponent();
 
-            var dbContext = new IMongoDbContext();
+            var dbContext = new MongoDbContext();
             DataContext = new MainWindowViewModel(dbContext);
         }
     }

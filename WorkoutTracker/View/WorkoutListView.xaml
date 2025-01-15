@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkoutTracker.View"
+             xmlns:local="clr-namespace:WorkoutTracker.View" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
     <Grid>
@@ -13,12 +13,18 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Workouts" FontSize="24"/>
+            <TextBlock Text="Workouts" FontSize="24" Margin="5" />
             <!-- Add ComboBox to order workout by date or favorite -->
         </StackPanel>
-        <ListView Grid.Row="1" >
-
+        <ListView 
+            Grid.Row="1" 
+            DataContext="{Binding WorkoutListVM}"
+            ItemsSource="{Binding Workouts}" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Date}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
-        <!-- Add listview here -->
     </Grid>
 </UserControl>
