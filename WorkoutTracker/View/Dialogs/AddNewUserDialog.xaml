@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+        xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" 
+        xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+        d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Create User" Height="250" Width="200"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner" Background="Gray">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -14,9 +16,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Background="Black" />
+        <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24"/>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="5,0,5,0">
             <ListView
                 ItemsSource="{Binding UserVM.User.FavoriteExercises}" 
                 SelectedItem="{Binding UserVM.SelectedExercise, UpdateSourceTrigger=PropertyChanged}">

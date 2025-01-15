@@ -83,7 +83,7 @@ public class MainWindowViewModel : BaseViewModel
         ExerciseListVM = new ExerciseListViewModel(this, new ExerciseRepository(dbContext));
         ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext));
         StatisticsVM = new StatisticsViewModel();
-        UserVM = new UserViewModel(this, new UserRepository(dbContext));
+        UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel();
         WorkoutVM = new WorkoutViewModel();
 

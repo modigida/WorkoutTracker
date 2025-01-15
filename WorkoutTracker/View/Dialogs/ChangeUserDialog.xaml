@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Select User" Height="250" Width="200"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner" Background="Gray">
     <Grid VerticalAlignment="Center">
         
         <ComboBox 

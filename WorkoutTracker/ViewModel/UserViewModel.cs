@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Windows;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
@@ -11,6 +12,7 @@ namespace WorkoutTracker.ViewModel;
 public class UserViewModel : BaseViewModel
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly ExerciseRepository _exerciseRepository;
     private ChangeUserDialog changeUser;
     private AddNewUserDialog addNewUser;
     private readonly UserRepository _userRepository;
@@ -67,12 +69,11 @@ public class UserViewModel : BaseViewModel
     public ICommand AddNewUserCommand { get; }
     public ICommand SaveAddNewUserCommand { get; }
     public ICommand LogoutCommand { get; }
-    public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository)
+    public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository, ExerciseRepository exerciseRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
         _userRepository = userRepository;
-
-        GetExercises();
+        _exerciseRepository = exerciseRepository;
 
         User = new User
         {
@@ -87,20 +88,30 @@ public class UserViewModel : BaseViewModel
         SaveAddNewUserCommand = new RelayCommand(SaveAddNewUser);
         LogoutCommand = new RelayCommand(Logout);
     }
-
-    private void GetExercises()
+    private async Task GetExercises()
     {
-        // Get Exercises from database
-
-        Exercises = new ObservableCollection<Exercise>();
+        var exerciseNames = await _exerciseRepository.GetAllExerciseNamesAsync();
+        var exercises = exerciseNames.Select(name => new Exercise { ExerciseName = name }).ToList();
+        Exercises = new ObservableCollection<Exercise>(exercises);
+        
         FilterAvailableExercises();
     }
-
     private void FilterAvailableExercises()
     {
+        if (AvailableExercises == null)
+        {
+            AvailableExercises = new ObservableCollection<Exercise>();
+        }
+
+        AvailableExercises.Clear();
+
         foreach (var exercise in Exercises)
         {
-            if (User.FavoriteExercises != null && User.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
+            if (User.FavoriteExercises != null && !User.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
+            {
+                AvailableExercises.Add(exercise);
+            }
+            if (NewUser.FavoriteExercises != null && !NewUser.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
             {
                 AvailableExercises.Add(exercise);
             }
@@ -119,11 +130,11 @@ public class UserViewModel : BaseViewModel
         });
         FilterAvailableExercises();
     }
-    private void GetUsers()
+    private async void GetUsers()
     {
         // Get Users from database
-
-        Users = new ObservableCollection<User>() { new User() { UserName = "ida", DateJoined = DateTime.Now }, new User() { UserName = "johanna", DateJoined = DateTime.Now } };
+        var users = await _userRepository.GetAllAsync();
+        Users = new ObservableCollection<User>(users);
     }
     private void ChangeUser(object obj)
     {
@@ -138,16 +149,22 @@ public class UserViewModel : BaseViewModel
         _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
         changeUser.Close();
     }
-    private void AddNewUser(object obj)
+    private async void AddNewUser(object obj)
     {
+        NewUser = new User
+        {
+            UserName = "New User",
+            FavoriteExercises = new List<FavoriteExercise>()
+        };
+        await GetExercises();
         addNewUser = new AddNewUserDialog(Application.Current.MainWindow, _mainWindowViewModel);
         addNewUser.ShowDialog();
         _mainWindowViewModel.IsOptionsMenuOpen = false;
     }
     private async void SaveAddNewUser(object obj)
     {
-        // Save new user to database
         User = NewUser;
+        User.DateJoined = DateTime.Now;
         await _userRepository.CreateAsync(User);
         _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
         addNewUser.Close();
