@@ -51,7 +51,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="4" Margin="5,0,0,0">
             <TextBlock Text="Notes" FontSize="24"/>
-            <TextBlock Text="{Binding WorkoutDetailsVM.Workout.Notes}"/>
+            <TextBox Text="{Binding WorkoutDetailsVM.Workout.Notes}"/>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -24,7 +24,7 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="Gray">
+        <Grid Grid.Row="0" Background="#272427">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -57,14 +57,14 @@
         <view:WorkoutView Grid.Row="1" Visibility="{Binding IsWorkoutVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:WorkoutDetailsView Grid.Row="1" Visibility="{Binding IsWorkoutDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-        <Grid Grid.Row="2" Background="Gray">
+        <Grid Grid.Row="2" Background="#272427">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}"/>
+            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}" />
             <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}"/>
             <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}"/>
         </Grid>

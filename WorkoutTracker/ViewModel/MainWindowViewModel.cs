@@ -94,7 +94,7 @@ public class MainWindowViewModel : BaseViewModel
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext));
-        WorkoutVM = new WorkoutViewModel(this);
+        WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM);
         WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext));
 
         OpenExerciseDetailsCommand = new RelayCommand(OpenExerciseDetails);
@@ -137,7 +137,7 @@ public class MainWindowViewModel : BaseViewModel
     }
     private async void OpenExerciseList(object obj)
     {
-        await ExerciseListVM.GetExercises();
+        await ExerciseListVM.GetExerciseNames();
         SetViewVisibility(() => IsExerciseListVisible = true);
     }
     private void OpenStatistics(object obj)
@@ -153,9 +153,9 @@ public class MainWindowViewModel : BaseViewModel
         await WorkoutListVM.GetAllWorkouts(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutListVisible = true);
     }
-    private void OpenWorkout(object obj)
+    private async void OpenWorkout(object obj)
     {
-        WorkoutVM.StartNewWorkout(UserVM.User.Id);
+        await WorkoutVM.StartNewWorkout(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutVisible = true);
     }
     public async void OpenWorkoutDetails(Workout workout)

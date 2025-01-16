@@ -3,10 +3,15 @@ using WorkoutTracker.Model;
 using WorkoutTracker.Repository;
 
 namespace WorkoutTracker.ViewModel;
-public class WorkoutListViewModel
+public class WorkoutListViewModel : BaseViewModel
 {
     private readonly WorkoutRepository _workoutRepository;
-    public ObservableCollection<Workout> Workouts {  get; set; }
+    private ObservableCollection<Workout> _workouts;
+    public ObservableCollection<Workout> Workouts 
+    {
+        get => _workouts;
+        set => SetProperty(ref _workouts, value);
+    }
     public WorkoutListViewModel(WorkoutRepository workoutRepository)
     {
         _workoutRepository = workoutRepository;

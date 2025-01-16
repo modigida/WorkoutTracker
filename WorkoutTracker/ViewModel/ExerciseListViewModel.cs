@@ -35,30 +35,8 @@ public class ExerciseListViewModel : BaseViewModel
 
         //GetExercises();
     }
-    public async Task GetExercises()
+    public async Task GetExerciseNames()
     {
-        //Exercises = new ObservableCollection<Exercise>
-        //{
-        //    new Exercise
-        //    {
-        //        ExerciseName = "Deadlift",
-        //        Description = "Lift a bar with weight",
-        //        MuscleGroups = new List<string> { "Back" },
-        //        IsFavorite = false
-        //    },
-        //    new Exercise
-        //    {
-        //        ExerciseName = "Squat",
-        //        Description = "Squat with weight on your shoulders",
-        //        MuscleGroups = new List<string> { "Legs" },
-        //        IsFavorite = true
-        //    } 
-        //};
-
-       // var exercises = _exerciseRepository.GetAllAsync().Result;
-       // Exercises = new ObservableCollection<Exercise>(exercises);
-
-
         var exerciseNames = await _exerciseRepository.GetAllExerciseNamesAsync();
         var exercises = exerciseNames.Select(name => new Exercise { ExerciseName = name }).ToList();
         Exercises = new ObservableCollection<Exercise>(exercises);

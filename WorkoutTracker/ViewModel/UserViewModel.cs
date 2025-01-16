@@ -11,14 +11,22 @@ public class UserViewModel : BaseViewModel
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ExerciseRepository _exerciseRepository;
+    private readonly UserRepository _userRepository;
+
     private ChangeUserDialog changeUser;
     private AddNewUserDialog addNewUser;
-    private readonly UserRepository _userRepository;
 
     private User _user;
     public User User
     {
-        get => _user;
+        get
+        {
+            if (_user == null)
+            {
+                _user = new User { UserName = "Offline" };
+            }
+            return _user;
+        }
         set => SetProperty(ref _user, value);
     }
     private ObservableCollection<User> _users;
@@ -105,14 +113,6 @@ public class UserViewModel : BaseViewModel
         _mainWindowViewModel = mainWindowViewModel;
         _userRepository = userRepository;
         _exerciseRepository = exerciseRepository;
-
-        User = new User
-        {
-            UserName = "modigIda",
-            DateJoined = DateTime.Now
-        };
-
-        mainWindowViewModel.StartText = $"{User.UserName} is logged in";
 
         ChangeUserCommand = new RelayCommand(ChangeUser);
         AddNewUserCommand = new RelayCommand(AddNewUser);
