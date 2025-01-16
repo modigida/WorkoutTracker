@@ -12,7 +12,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="{Binding WorkoutDetailsVM.Workout.Date, StringFormat='{}{0:MMMM dd, yyyy}'}" FontSize="24" Margin="10" HorizontalAlignment="Center"/>
@@ -31,8 +30,8 @@
             <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBlock Text="Exercises" FontSize="24"/>
                 <ListView DataContext="{Binding WorkoutDetailsVM}"
-                        ItemsSource="{Binding Workout.Exercises}"
-                        SelectedItem="{Binding SelectedWorkout}">
+                        ItemsSource="{Binding Exercises}"
+                        SelectedItem="{Binding SelectedExercise}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding ExerciseName}" />
@@ -42,12 +41,31 @@
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Column="1">
                 <TextBlock Text="Sets" FontSize="24"/>
-                
-                <!-- Add Listview displaying registered sets -->
+                <ListView DataContext="{Binding WorkoutDetailsVM.SelectedExercise}"
+                        ItemsSource="{Binding Sets}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Weight}" />
+                                    <TextBlock Text="kg" Margin="5,0,20,0" />
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                    <TextBlock Text="{Binding Reps}" />
+                                    <TextBlock Text="reps" Margin="5,0,20,0" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </StackPanel>
         </Grid>
-
-        <CheckBox Content="IsFavorite" Grid.Row="3"  Margin="5,0,0,0" />
 
         <StackPanel Orientation="Vertical" Grid.Row="4" Margin="5,0,0,0">
             <TextBlock Text="Notes" FontSize="24"/>

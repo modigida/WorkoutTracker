@@ -22,3 +22,4 @@ public class WorkoutListViewModel : BaseViewModel
         Workouts = new ObservableCollection<Workout>(workouts);
     }
 }
+

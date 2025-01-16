@@ -11,5 +11,4 @@ public class Workout
     public DateTime EndTime { get; set; }
     public List<WorkoutExercise> Exercises { get; set; }
     public string Notes { get; set; }
-    public bool IsFavorite { get; set; }
 }

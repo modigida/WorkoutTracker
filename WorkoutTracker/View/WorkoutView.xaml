@@ -30,8 +30,7 @@
                 </Grid.ColumnDefinitions>
                 <ComboBox 
                     ItemsSource="{Binding ExerciseListVM.Exercises}"
-                    Text="{Binding WorkoutVM.SelectedExercise.ExerciseName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    SelectedItem="{Binding WorkoutVM.SelectedExercise, UpdateSourceTrigger=PropertyChanged}" 
+                    SelectedItem="{Binding WorkoutVM.SelectedExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     Width="120">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -41,26 +40,76 @@
                 </ComboBox>
                 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" >
-                    <TextBox Text="2" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
+                    <TextBox Text="{Binding WorkoutVM.Weight}" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
                         <!-- Bind to weight -->
                     </TextBox>
                     <TextBlock Text="kg" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" >
-                    <TextBox Text="5" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
+                    <TextBox Text="{Binding WorkoutVM.Reps}" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
                         <!-- Bind to reps -->
                     </TextBox>
                     <TextBlock Text="reps" VerticalAlignment="Center" />
                 </StackPanel>
 
-                <Button Content="Save set" Grid.Column="3" Width="120" >
-                    <!-- Save set -->
-                </Button>
+                <Button Content="Save set" Command="{Binding WorkoutVM.SaveWorkoutExerciseCommand}" Grid.Column="3" Width="120" />
+
             </Grid>
-            <ListView Margin="0,5" Height="398" >
-                <!-- grid columns; 0 = exerciseName, 1 = weight, 2 = reps -->
+            <ListView DataContext="{Binding WorkoutVM}"
+                ItemsSource="{Binding WorkoutExercises}"
+                Margin="0,5"
+                Height="398">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="110"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Exercise Name -->
+                            <TextBlock Text="{Binding ExerciseName}"
+                                VerticalAlignment="Center"
+                                Grid.Column="0" />
+
+                            <!-- Sets -->
+                            <ItemsControl ItemsSource="{Binding Sets}"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Stretch">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Weight -->
+                                            <StackPanel Orientation="Horizontal" Grid.Column="0" >
+                                                <TextBlock Text="{Binding Weight}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left" />
+                                                <TextBlock Text="kg" Margin="5,0,0,0" />
+                                            </StackPanel>
+
+                                            <!-- Reps -->
+                                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                <TextBlock Text="{Binding Reps}"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left"
+                                                Margin="5,0,0,0" />
+                                                <TextBlock Text="reps" Margin="5,0,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
+
         </StackPanel>
 
         <Grid Grid.Row="2" >
@@ -82,17 +131,20 @@
 
                     <StackPanel Grid.Column="0" Orientation="Vertical" >
                         <TextBlock Text="Total weight" HorizontalAlignment="Center" FontSize="14" />
-                        <TextBlock Text="27 kg" HorizontalAlignment="Center" FontSize="14" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                            <TextBlock Text="{Binding WorkoutVM.TotalWeight}" HorizontalAlignment="Center" FontSize="14" />
+                            <TextBlock Text="kg" HorizontalAlignment="Center" FontSize="14" Margin="5,0,0,0" />
+                        </StackPanel>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="1" Orientation="Vertical" >
-                        <TextBlock Text="Total sests" HorizontalAlignment="Center" FontSize="14" />
-                        <TextBlock Text="6" HorizontalAlignment="Center" FontSize="14" />
+                        <TextBlock Text="Total sets" HorizontalAlignment="Center" FontSize="14" />
+                        <TextBlock Text="{Binding WorkoutVM.TotalSets}" HorizontalAlignment="Center" FontSize="14" />
                 </StackPanel>
                 
                 <StackPanel Grid.Column="2" Orientation="Vertical" >
                         <TextBlock Text="Total reps" HorizontalAlignment="Center" FontSize="14" />
-                        <TextBlock Text="63" HorizontalAlignment="Center" FontSize="14" />
+                        <TextBlock Text="{Binding WorkoutVM.TotalReps}" HorizontalAlignment="Center" FontSize="14" />
                 </StackPanel>
             </Grid>
             </Grid>
