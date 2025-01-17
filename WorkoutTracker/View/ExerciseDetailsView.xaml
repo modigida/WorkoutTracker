@@ -21,9 +21,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding ExerciseDetailsVM.Exercise.ExerciseName}" FontSize="34" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+        <TextBox Text="{Binding ExerciseDetailsVM.Exercise.ExerciseName}" FontSize="34" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10"/>
 
         <Button 
             Command="{Binding ExerciseDetailsVM.IsFavoriteExerciseCommand}" 
@@ -91,6 +92,8 @@
             </StackPanel>
         </StackPanel>
 
-        <Button Content="Delete" HorizontalAlignment="Right" Grid.Row="4"/>
+        <Button Content="Save" Command="{Binding ExerciseDetailsVM.SaveExerciseCommand}" Width="150" FontSize="18" BorderThickness="1.5" Padding="10" HorizontalAlignment="Center" Grid.Row="4" Margin="0,0,0,15" />
+        
+        <Button Content="Delete" Command="{Binding ExerciseDetailsVM.DeleteExerciseCommand}" HorizontalAlignment="Right" Grid.Row="5" Margin="0,0,0,15" />
     </Grid>
 </UserControl>

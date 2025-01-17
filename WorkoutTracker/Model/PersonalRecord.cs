@@ -7,7 +7,7 @@ public class PersonalRecord
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string UserId { get; set; }
-    public string ExerciseId { get; set; }
+    public string ExerciseName { get; set; }
     public double MaxWeight { get; set; }
     public DateTime DateAchieved { get; set; }
 }

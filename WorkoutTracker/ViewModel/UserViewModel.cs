@@ -43,6 +43,12 @@ public class UserViewModel : BaseViewModel
         get => _availableExercises;
         set => SetProperty(ref _availableExercises, value);
     }
+    private ObservableCollection<PersonalRecord> _personalRecords;
+    public ObservableCollection<PersonalRecord> PersonalRecords
+    {
+        get => _personalRecords;
+        set => SetProperty(ref _personalRecords, value);
+    }
 
     // ChangeUserDialog
     private User _selectedUser;
@@ -108,6 +114,8 @@ public class UserViewModel : BaseViewModel
     public ICommand DeleteFavoriteExerciseCommand { get; }
     public ICommand SaveAddNewUserCommand { get; }
     public ICommand LogoutCommand { get; }
+    public ICommand SaveUserCommand { get; }
+    public ICommand DeleteUserCommand { get; }
     public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository, ExerciseRepository exerciseRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
@@ -120,6 +128,8 @@ public class UserViewModel : BaseViewModel
         DeleteFavoriteExerciseCommand = new RelayCommand<FavoriteExercise>(async favoriteExercise => await DeleteFavoriteExercise(favoriteExercise));
         SaveAddNewUserCommand = new RelayCommand(SaveAddNewUser);
         LogoutCommand = new RelayCommand(Logout);
+        SaveUserCommand = new RelayCommand(SaveUser);
+        DeleteUserCommand = new RelayCommand(DeleteUser);
     }
     private async Task GetExercises()
     {
@@ -189,6 +199,26 @@ public class UserViewModel : BaseViewModel
         var users = await _userRepository.GetAllAsync();
         Users = new ObservableCollection<User>(users);
     }
+    public async Task GetUser(string userId)
+    {
+        User = await _userRepository.GetByIdAsync(userId);
+        CalculatePersonalRecords();
+    }
+
+    private void CalculatePersonalRecords()
+    {
+        PersonalRecords = new ObservableCollection<PersonalRecord>
+        {
+            new PersonalRecord
+            {
+                ExerciseName = "Bench Press",
+                MaxWeight = 39.5,
+                DateAchieved = DateTime.Now
+            }
+        };
+        // Foreach registered exercise, highest rep-weight.
+    }
+
     private void ChangeUser(object obj)
     {
         GetUsers();
@@ -232,5 +262,14 @@ public class UserViewModel : BaseViewModel
         _mainWindowViewModel.StartText = "Choose a user to start";
         _mainWindowViewModel.OpenStartView();
         _mainWindowViewModel.IsOptionsMenuOpen = false;
+    }
+    private async void SaveUser(object obj)
+    {
+        await _userRepository.UpdateAsync(User.Id, User);
+    }
+    private async void DeleteUser(object obj)
+    {
+        await _userRepository.DeleteAsync(User.Id);
+        Logout(null);
     }
 }

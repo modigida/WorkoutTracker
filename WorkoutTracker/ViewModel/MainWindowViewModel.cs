@@ -90,7 +90,7 @@ public class MainWindowViewModel : BaseViewModel
         StartText = "Choose a user to start";
 
         ExerciseListVM = new ExerciseListViewModel(this, new ExerciseRepository(dbContext));
-        ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext));
+        ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext), this);
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext), this);
@@ -135,7 +135,7 @@ public class MainWindowViewModel : BaseViewModel
         SetViewVisibility(() => IsExerciseDetailsVisible = true);
         ExerciseListVM.SelectedExercise = null;
     }
-    private async void OpenExerciseList(object obj)
+    public async void OpenExerciseList(object obj)
     {
         await ExerciseListVM.GetExerciseNames();
         SetViewVisibility(() => IsExerciseListVisible = true);
@@ -144,9 +144,11 @@ public class MainWindowViewModel : BaseViewModel
     {
         SetViewVisibility(() => IsStatisticsVisible = true);
     }
-    private void OpenUser(object obj)
+    private async void OpenUser(object obj)
     {
+        await UserVM.GetUser(UserVM.User.Id);
         SetViewVisibility(() => IsUserVisible = true);
+        IsOptionsMenuOpen = false;
     }
     private async void OpenWorkoutList(object obj)
     {

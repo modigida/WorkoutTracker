@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Model;
@@ -8,6 +9,7 @@ namespace WorkoutTracker.ViewModel;
 public class ExerciseDetailsViewModel : BaseViewModel
 {
     private readonly ExerciseListViewModel _exerciseListViewModel;
+    private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly MuscleGroupRepository _muscleGroupRepository;
     private readonly ExerciseRepository _exerciseRepository;
 
@@ -46,30 +48,29 @@ public class ExerciseDetailsViewModel : BaseViewModel
     public ICommand IsFavoriteExerciseCommand { get; }
     public ICommand AddMuscleGroupCommand { get; }
     public ICommand DeleteMuscleGroupCommand { get; }
-    public ExerciseDetailsViewModel(ExerciseListViewModel exerciseListViewModel, MuscleGroupRepository muscleGroupRepository, ExerciseRepository exerciseRepository)
+    public ICommand SaveExerciseCommand { get; }
+    public ICommand DeleteExerciseCommand { get; }
+    public ExerciseDetailsViewModel(ExerciseListViewModel exerciseListViewModel, MuscleGroupRepository muscleGroupRepository, 
+        ExerciseRepository exerciseRepository, MainWindowViewModel mainWindowViewModel)
     {
         _exerciseListViewModel = exerciseListViewModel;
         _muscleGroupRepository = muscleGroupRepository;
         _exerciseRepository = exerciseRepository;
+        _mainWindowViewModel = mainWindowViewModel;
 
         AvailableMuscleGroups = new ObservableCollection<MuscleGroup>();
-
-        GetExercise();
-
-        SyncFavoriteStatus();
 
         IsFavoriteExerciseCommand = new RelayCommand(SetFavoriteStatus);
         AddMuscleGroupCommand = new RelayCommand(AddMuscleGroup);
         DeleteMuscleGroupCommand = new RelayCommand(DeleteMuscleGroup);
+        SaveExerciseCommand = new RelayCommand(SaveExercise);
+        DeleteExerciseCommand = new RelayCommand(DeleteExercise);
     }
-
     public async void GetExercise(Exercise selectedExercise = null)
     {
         if (selectedExercise != null)
         {
             Exercise = await _exerciseRepository.GetByNameAsync(selectedExercise.ExerciseName);
-
-            FilterAvailableMuscleGroups();
         }
         else
         {
@@ -81,6 +82,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
                 IsFavorite = false
             };
         }
+        SyncFavoriteStatus();
+        FilterAvailableMuscleGroups();
     }
     private void DeleteMuscleGroup(object obj)
     {
@@ -116,5 +119,29 @@ public class ExerciseDetailsViewModel : BaseViewModel
     private void SetFavoriteStatus(object obj)
     {
         IsFavoriteExercise = !IsFavoriteExercise;
+    }
+    private async void SaveExercise(object obj)
+    {
+        if (_exerciseListViewModel.Exercises.Any(e => e.ExerciseName == Exercise.ExerciseName))
+        {
+            await _exerciseRepository.UpdateAsync(Exercise.Id, Exercise);
+        }
+        else
+        {
+            await _exerciseRepository.CreateAsync(Exercise);
+        }
+        _mainWindowViewModel.OpenExerciseList(null);
+    }
+    private async void DeleteExercise(object obj)
+    {
+        var finish = MessageBox.Show($"Delete exercise?",
+                                            "Confirm",
+                                            MessageBoxButton.YesNo,
+                                            MessageBoxImage.Question);
+
+        if (finish != MessageBoxResult.Yes) return;
+
+        await _exerciseRepository.DeleteAsync(Exercise.Id);
+        _mainWindowViewModel.OpenExerciseList(null);
     }
 }
