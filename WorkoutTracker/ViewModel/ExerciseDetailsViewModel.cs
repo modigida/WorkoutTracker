@@ -32,8 +32,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
         get => _availableMuscleGroups;
         set => SetProperty(ref _availableMuscleGroups, value);
     }
-    private string _selectedMuscleGroup;
-    public string SelectedMuscleGroup
+    private MuscleGroup _selectedMuscleGroup;
+    public MuscleGroup SelectedMuscleGroup
     {
         get => _selectedMuscleGroup;
         set => SetProperty(ref _selectedMuscleGroup, value);
@@ -113,7 +113,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
     {
         if (SelectedMuscleGroup != null)
         {
-            var muscleGroup = MuscleGroups.FirstOrDefault(mg => mg.MuscleGroupName == SelectedMuscleGroup);
+            var muscleGroup = MuscleGroups.FirstOrDefault(mg => mg.MuscleGroupName == SelectedMuscleGroup.MuscleGroupName);
             if (muscleGroup != null && !ExercisesMuscleGroups.Contains(muscleGroup))
             {
                 ExercisesMuscleGroups.Add(muscleGroup);
