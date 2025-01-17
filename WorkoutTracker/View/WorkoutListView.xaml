@@ -19,10 +19,11 @@
             Grid.Row="1" 
             DataContext="{Binding WorkoutListVM}"
             ItemsSource="{Binding Workouts}"
-            SelectedItem="{Binding SelectedWorkout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            SelectedItem="{Binding SelectedWorkout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Margin="5">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Date}" />
+                    <TextBlock Text="{Binding Date, StringFormat='{}{0:d/M-yy}'}" FontSize="18" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

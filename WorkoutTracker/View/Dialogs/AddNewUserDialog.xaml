@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <TextBox Text="{Binding UserVM.NewUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="24"/>
+                 HorizontalContentAlignment="Center" FontSize="24"/>
 
         <Grid Grid.Row="1" Margin="5,0,5,0">
             <Grid.RowDefinitions>
@@ -37,8 +37,8 @@
                                 <ColumnDefinition Width="25"/>
                             </Grid.ColumnDefinitions>
                             
-                            <TextBlock Text="{Binding ExerciseName}" VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding TargetWeight}" Grid.Column="1" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding ExerciseName}" />
+                            <TextBlock Text="{Binding TargetWeight}" Grid.Column="1" />
                             <Button 
                                 Content="X" 
                                 Command="{Binding DataContext.DeleteFavoriteExerciseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" 
@@ -68,7 +68,7 @@
                 </ComboBox>
 
                 <TextBox Text="{Binding UserVM.TargetWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                         Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                         Grid.Column="1" HorizontalContentAlignment="Center" />
 
                 <Button Content="Add" Command="{Binding UserVM.AddFavoriteExerciseCommand}" Grid.Column="2" />
             </Grid>

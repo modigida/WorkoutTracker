@@ -19,6 +19,12 @@ public class ExerciseDetailsViewModel : BaseViewModel
         get => _exercise;
         set => SetProperty(ref _exercise, value);
     }
+    private ObservableCollection<string> _exercisesMuscleGroups;
+    public ObservableCollection<string> ExercisesMuscleGroups
+    {
+        get => _exercisesMuscleGroups;
+        set => SetProperty(ref _exercisesMuscleGroups, value);
+    }
     public ObservableCollection<MuscleGroup> MuscleGroups { get; set; }
     private ObservableCollection<MuscleGroup> _availableMuscleGroups;
     public ObservableCollection<MuscleGroup> AvailableMuscleGroups
@@ -71,6 +77,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
         if (selectedExercise != null)
         {
             Exercise = await _exerciseRepository.GetByNameAsync(selectedExercise.ExerciseName);
+            ExercisesMuscleGroups = new ObservableCollection<string>(Exercise.MuscleGroups);
         }
         else
         {
@@ -97,7 +104,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
     }
     private void AddMuscleGroup(object obj)
     {
-        Exercise.MuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
+        ExercisesMuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
+        //Exercise.MuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
         FilterAvailableMuscleGroups();
     }
     private void FilterAvailableMuscleGroups()
@@ -106,7 +114,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
 
         foreach (var muscleGroup in MuscleGroups)
         {
-            if (Exercise.MuscleGroups != null &&  !Exercise.MuscleGroups.Any(m => m.Equals(muscleGroup.MuscleGroupName)))
+            if (_exercisesMuscleGroups != null &&  !_exercisesMuscleGroups.Any(m => m.Equals(muscleGroup.MuscleGroupName)))
             {
                 AvailableMuscleGroups.Add(muscleGroup);
             }
@@ -122,6 +130,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
     }
     private async void SaveExercise(object obj)
     {
+        Exercise.MuscleGroups = new List<string>(_exercisesMuscleGroups);
+
         if (_exerciseListViewModel.Exercises.Any(e => e.ExerciseName == Exercise.ExerciseName))
         {
             await _exerciseRepository.UpdateAsync(Exercise.Id, Exercise);

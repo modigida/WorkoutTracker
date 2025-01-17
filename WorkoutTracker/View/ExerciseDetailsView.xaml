@@ -18,8 +18,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -30,7 +33,7 @@
             Command="{Binding ExerciseDetailsVM.IsFavoriteExerciseCommand}" 
             Visibility="{Binding ExerciseDetailsVM.IsFavoriteExercise, Converter={StaticResource BoolToVisibilityConverter}}" 
             Grid.Row="1" HorizontalAlignment="Center"
-            Height="30" Width="30">
+            Height="30" Width="30" BorderThickness="0" >
             <Button.Content>
                 <Image Source="pack://application:,,,/Resources/FavoriteSymbol.png"/>
             </Button.Content>
@@ -40,24 +43,21 @@
             Command="{Binding ExerciseDetailsVM.IsFavoriteExerciseCommand}" 
             Visibility="{Binding ExerciseDetailsVM.IsNotFavoriteExercise, Converter={StaticResource BoolToVisibilityConverter}}" 
             Grid.Row="1" HorizontalAlignment="Center"
-            Height="30" Width="30">
+            Height="30" Width="30" BorderThickness="0" >
             <Button.Content>
                 <Image Source="pack://application:,,,/Resources/NotFavoriteSymbol.png"/>
             </Button.Content>
         </Button>
 
-        <StackPanel Orientation="Vertical" Grid.Row="2" >
-            <TextBlock Text="Description" FontSize="18"/>
-            <TextBox Text="{Binding ExerciseDetailsVM.Exercise.Description}" FontSize="14" TextWrapping="Wrap"/>
-        </StackPanel>
+        <TextBlock Text="Description" FontSize="18" Grid.Row="2"/>
+        <TextBox Text="{Binding ExerciseDetailsVM.Exercise.Description}" FontSize="14" TextWrapping="Wrap" Grid.Row="3" VerticalContentAlignment="Top" BorderBrush="#fffff0" Background="#80414141"/>
 
-        <StackPanel Orientation="Vertical" Grid.Row="3" >
-            <TextBlock Text="Muscle Groups" HorizontalAlignment="Left" FontSize="18"/>
+            <TextBlock Text="Muscle Groups" HorizontalAlignment="Left" FontSize="18" Grid.Row="4"/>
             <ListView
                 DataContext="{Binding ExerciseDetailsVM}"
-                ItemsSource="{Binding Exercise.MuscleGroups}" 
+                ItemsSource="{Binding ExercisesMuscleGroups}" 
                 SelectedItem="{Binding SelectedMuscleGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                HorizontalAlignment="Stretch" FontSize="14" >
+                HorizontalAlignment="Stretch" FontSize="14" Grid.Row="5" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -65,7 +65,7 @@
                                 <ColumnDefinition Width="275"/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding}" />
                             <Button 
                                 Content="Delete"
                                 Grid.Column="1" 
@@ -77,23 +77,26 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <StackPanel Orientation="Horizontal">
+            <Grid Grid.Row="6" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
                 <ComboBox 
                     ItemsSource="{Binding ExerciseDetailsVM.AvailableMuscleGroups}"
                     SelectedItem="{Binding ExerciseDetailsVM.SelectedMuscleGroup}"
-                    FontSize="14" Width="250">
+                    FontSize="14" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding MuscleGroupName}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <Button Content="Add" Command="{Binding ExerciseDetailsVM.AddMuscleGroupCommand}" />
-            </StackPanel>
-        </StackPanel>
+                <Button Content="Add" Command="{Binding ExerciseDetailsVM.AddMuscleGroupCommand}" Grid.Column="1" Margin="5,0,0,0"/>
+            </Grid>
 
-        <Button Content="Save" Command="{Binding ExerciseDetailsVM.SaveExerciseCommand}" Width="150" FontSize="18" BorderThickness="1.5" Padding="10" HorizontalAlignment="Center" Grid.Row="4" Margin="0,0,0,15" />
+        <Button Content="Save" Command="{Binding ExerciseDetailsVM.SaveExerciseCommand}" Width="200" FontSize="18" BorderThickness="1.5" Padding="10" HorizontalAlignment="Center" Grid.Row="7" Margin="5" />
         
-        <Button Content="Delete" Command="{Binding ExerciseDetailsVM.DeleteExerciseCommand}" HorizontalAlignment="Right" Grid.Row="5" Margin="0,0,0,15" />
+        <Button Content="Delete" Command="{Binding ExerciseDetailsVM.DeleteExerciseCommand}" HorizontalAlignment="Right" Grid.Row="8" Margin="0,0,0,15" />
     </Grid>
 </UserControl>

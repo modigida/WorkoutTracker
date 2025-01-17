@@ -21,10 +21,11 @@
             Grid.Row="1" 
             DataContext="{Binding ExerciseListVM}"
             ItemsSource="{Binding Exercises}"
-            SelectedItem="{Binding SelectedExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            SelectedItem="{Binding SelectedExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Margin="5">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding ExerciseName}" />
+                    <TextBlock Text="{Binding ExerciseName}" FontSize="18" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

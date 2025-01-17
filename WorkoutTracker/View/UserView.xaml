@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -27,7 +28,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TextBlock Text="Goals" FontSize="24"/>
             <ListView FontSize="24" DataContext="{Binding UserVM}" ItemsSource="{Binding User.FavoriteExercises}" Grid.Row="1" >
@@ -35,23 +35,24 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="{Binding ExerciseName}"/>
+                            <TextBlock Text="{Binding ExerciseName}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" >
                                 <TextBlock Text="{Binding TargetWeight}" />
                                 <TextBlock Text="kg" Margin="5,0,0,0" />
                             </StackPanel>
-                            <Button Content="D" Grid.Column="2"/>
+                            <Button Content="D" Grid.Column="2" BorderThickness='0' HorizontalContentAlignment="Right" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-
-            <Grid Grid.Row="2">
+        </Grid>
+        
+        <Grid Grid.Row="2" Margin="5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="*" />  
@@ -70,13 +71,12 @@
                 </ComboBox>
 
                 <TextBox Text="{Binding UserVM.TargetWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    Grid.Column="1" HorizontalContentAlignment="Center" />
 
                 <Button Content="Add" Command="{Binding UserVM.AddFavoriteExerciseCommand}" Grid.Column="2" />
             </Grid>
-        </Grid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Stretch" Margin="5">
+        <Grid Grid.Row="3" HorizontalAlignment="Stretch" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -88,9 +88,9 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="90"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding ExerciseName}"/>
@@ -105,8 +105,8 @@
             </ListView>
         </Grid>
 
-        <Button Content="Save" Command="{Binding UserVM.SaveUserCommand}" HorizontalAlignment="Stretch" FontSize="18" BorderThickness="2" Padding="5" Grid.Row="3" Margin="5" />
+        <Button Content="Save" Command="{Binding UserVM.SaveUserCommand}" HorizontalAlignment="Stretch" FontSize="18" Padding="5" Grid.Row="4" Margin="5" />
 
-        <Button Content="Delete" Command="{Binding UserVM.DeleteUserCommand}" HorizontalAlignment="Right" Grid.Row="4" Margin="0,0,0,15" />
+        <Button Content="Delete" Command="{Binding UserVM.DeleteUserCommand}" HorizontalAlignment="Right" Grid.Row="5" Margin="0,0,5,15" />
     </Grid>
 </UserControl>
