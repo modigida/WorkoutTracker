@@ -57,19 +57,19 @@
                 DataContext="{Binding ExerciseDetailsVM}"
                 ItemsSource="{Binding ExercisesMuscleGroups}" 
                 SelectedItem="{Binding SelectedMuscleGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                HorizontalAlignment="Stretch" FontSize="14" Grid.Row="5" >
+                HorizontalAlignment="Stretch" FontSize="14" Grid.Row="5" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="275"/>
+                                <ColumnDefinition Width="250"/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding}" />
+                            <TextBlock Text="{Binding MuscleGroupName}" />
                             <Button 
                                 Content="Delete"
                                 Grid.Column="1" 
-                                Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                 CommandParameter="{Binding}" />
 
                         </Grid>

@@ -19,8 +19,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
         get => _exercise;
         set => SetProperty(ref _exercise, value);
     }
-    private ObservableCollection<string> _exercisesMuscleGroups;
-    public ObservableCollection<string> ExercisesMuscleGroups
+    private ObservableCollection<MuscleGroup> _exercisesMuscleGroups;
+    public ObservableCollection<MuscleGroup> ExercisesMuscleGroups
     {
         get => _exercisesMuscleGroups;
         set => SetProperty(ref _exercisesMuscleGroups, value);
@@ -32,8 +32,8 @@ public class ExerciseDetailsViewModel : BaseViewModel
         get => _availableMuscleGroups;
         set => SetProperty(ref _availableMuscleGroups, value);
     }
-    private MuscleGroup _selectedMuscleGroup;
-    public MuscleGroup SelectedMuscleGroup
+    private string _selectedMuscleGroup;
+    public string SelectedMuscleGroup
     {
         get => _selectedMuscleGroup;
         set => SetProperty(ref _selectedMuscleGroup, value);
@@ -68,7 +68,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
 
         IsFavoriteExerciseCommand = new RelayCommand(SetFavoriteStatus);
         AddMuscleGroupCommand = new RelayCommand(AddMuscleGroup);
-        DeleteMuscleGroupCommand = new RelayCommand(DeleteMuscleGroup);
+        DeleteMuscleGroupCommand = new RelayCommand<MuscleGroup>(async muscleGroup => await DeleteMuscleGroup(muscleGroup));
         SaveExerciseCommand = new RelayCommand(SaveExercise);
         DeleteExerciseCommand = new RelayCommand(DeleteExercise);
     }
@@ -77,7 +77,10 @@ public class ExerciseDetailsViewModel : BaseViewModel
         if (selectedExercise != null)
         {
             Exercise = await _exerciseRepository.GetByNameAsync(selectedExercise.ExerciseName);
-            ExercisesMuscleGroups = new ObservableCollection<string>(Exercise.MuscleGroups);
+            var muscleGroups = await _muscleGroupRepository.GetAllAsync();
+            ExercisesMuscleGroups = new ObservableCollection<MuscleGroup>(
+                muscleGroups.Where(mg => Exercise.MuscleGroups.Contains(mg.MuscleGroupName))
+            );
         }
         else
         {
@@ -88,13 +91,17 @@ public class ExerciseDetailsViewModel : BaseViewModel
                 MuscleGroups = new List<string>(),
                 IsFavorite = false
             };
+            ExercisesMuscleGroups = new ObservableCollection<MuscleGroup>();
         }
         SyncFavoriteStatus();
         FilterAvailableMuscleGroups();
     }
-    private void DeleteMuscleGroup(object obj)
+    private async Task DeleteMuscleGroup(MuscleGroup muscleGroup)
     {
-        Exercise.MuscleGroups.Remove(SelectedMuscleGroup.MuscleGroupName);
+        if (muscleGroup != null)
+        {
+            ExercisesMuscleGroups.Remove(muscleGroup);
+        }
         FilterAvailableMuscleGroups();
     }
     public async Task GetMuscleGroups()
@@ -104,9 +111,15 @@ public class ExerciseDetailsViewModel : BaseViewModel
     }
     private void AddMuscleGroup(object obj)
     {
-        ExercisesMuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
-        //Exercise.MuscleGroups.Add(SelectedMuscleGroup.MuscleGroupName);
-        FilterAvailableMuscleGroups();
+        if (SelectedMuscleGroup != null)
+        {
+            var muscleGroup = MuscleGroups.FirstOrDefault(mg => mg.MuscleGroupName == SelectedMuscleGroup);
+            if (muscleGroup != null && !ExercisesMuscleGroups.Contains(muscleGroup))
+            {
+                ExercisesMuscleGroups.Add(muscleGroup);
+                FilterAvailableMuscleGroups();
+            }
+        }
     }
     private void FilterAvailableMuscleGroups()
     {
@@ -114,7 +127,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
 
         foreach (var muscleGroup in MuscleGroups)
         {
-            if (_exercisesMuscleGroups != null &&  !_exercisesMuscleGroups.Any(m => m.Equals(muscleGroup.MuscleGroupName)))
+            if (!ExercisesMuscleGroups.Any(m => m.MuscleGroupName == muscleGroup.MuscleGroupName))
             {
                 AvailableMuscleGroups.Add(muscleGroup);
             }
@@ -130,7 +143,7 @@ public class ExerciseDetailsViewModel : BaseViewModel
     }
     private async void SaveExercise(object obj)
     {
-        Exercise.MuscleGroups = new List<string>(_exercisesMuscleGroups);
+        Exercise.MuscleGroups = ExercisesMuscleGroups.Select(mg => mg.MuscleGroupName).ToList();
 
         if (_exerciseListViewModel.Exercises.Any(e => e.ExerciseName == Exercise.ExerciseName))
         {
