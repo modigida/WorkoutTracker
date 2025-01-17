@@ -82,11 +82,15 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-                <ComboBox 
+            <ComboBox 
                     ItemsSource="{Binding ExerciseDetailsVM.AvailableMuscleGroups}"
                     SelectedItem="{Binding ExerciseDetailsVM.SelectedMuscleGroup}"
                     FontSize="14" >
-                    <ComboBox.ItemTemplate>
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#80414141" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
+                </ComboBox.Resources>
+                <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding MuscleGroupName}"/>
                         </DataTemplate>

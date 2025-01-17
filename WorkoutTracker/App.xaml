@@ -6,6 +6,7 @@
     <Application.Resources>
         <SolidColorBrush x:Key="GlobalBackgroundColor" Color="Transparent" />
         <SolidColorBrush x:Key="GlobalForegroundColor" Color="#fffff0" />
+        <SolidColorBrush x:Key="GlobalComponentColor" Color="#80414141" />
 
         <Style TargetType="Window">
             <Setter Property="Background" Value="{StaticResource GlobalBackgroundColor}"/>
@@ -16,7 +17,7 @@
         </Style>
 
         <Style TargetType="ListView">
-            <Setter Property="Background" Value="#80414141"/>
+            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}"/>
         </Style>
@@ -42,16 +43,15 @@
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="Gray"/>
-            <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
+            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            
         </Style>
 
         <Style TargetType="ComboBoxItem">
-            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GlobalComponentColor}"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
