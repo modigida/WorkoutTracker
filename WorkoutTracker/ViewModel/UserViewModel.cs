@@ -223,8 +223,9 @@ public class UserViewModel : BaseViewModel
     private void SaveChangeUser()
     {
         User = SelectedUser;
-        _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
+        _mainWindowViewModel.SetCurrentUserStatus();
         SelectedUser = null;
+        _mainWindowViewModel.OpenStartView();
         changeUser.Close();
     }
     private async void AddNewUser(object obj)
@@ -245,15 +246,15 @@ public class UserViewModel : BaseViewModel
         User.DateJoined = DateTime.Now;
         User.FavoriteExercises = new List<FavoriteExercise>(FavoriteExercises);
         await _userRepository.CreateAsync(User);
-        _mainWindowViewModel.StartText = $"{User.UserName} is logged in";
+        _mainWindowViewModel.SetCurrentUserStatus();
         NewUser = null;
         FavoriteExercises.Clear();
         addNewUser.Close();
     }
     private void Logout(object obj)
     {
-        User = new User { UserName = "Offline" };
-        _mainWindowViewModel.StartText = "Choose a user to start";
+        User = null;
+        _mainWindowViewModel.SetCurrentUserStatus();
         _mainWindowViewModel.OpenStartView();
         _mainWindowViewModel.IsOptionsMenuOpen = false;
     }

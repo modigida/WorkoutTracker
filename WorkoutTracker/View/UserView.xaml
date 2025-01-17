@@ -34,7 +34,7 @@
                 DataContext="{Binding UserVM}" 
                 ItemsSource="{Binding FavoriteExercises}" 
                 SelectedItem="{Binding SelectedFavoriteExercise, UpdateSourceTrigger=PropertyChanged}" 
-                Grid.Row="1" FontSize="18" >
+                Grid.Row="1" FontSize="18" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

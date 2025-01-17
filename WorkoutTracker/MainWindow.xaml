@@ -32,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <ToggleButton x:Name="OptionsButton" Content="{Binding UserVM.User.UserName}" Command="{Binding OpenOptionsMenuCommand}" />
+                <ToggleButton x:Name="OptionsButton" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
                 <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
                     <StackPanel Background="Gray">
                         <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" HorizontalContentAlignment="Left"/>

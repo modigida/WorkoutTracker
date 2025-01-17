@@ -14,6 +14,12 @@ public class MainWindowViewModel : BaseViewModel
     public WorkoutListViewModel WorkoutListVM { get; set; }
     public WorkoutViewModel WorkoutVM { get; set; }
     public WorkoutDetailsViewModel WorkoutDetailsVM { get; set; }
+    private string _currentUserStatus;
+    public string CurrentUserStatus
+    {
+        get => _currentUserStatus; 
+        set => SetProperty(ref _currentUserStatus, value);
+    }
 
     private bool _isStartVisible;
     public bool IsStartVisible
@@ -76,7 +82,6 @@ public class MainWindowViewModel : BaseViewModel
         get => _startText;
         set => SetProperty(ref _startText, value);
     }
-
     public ICommand OpenExerciseDetailsCommand { get; }
     public ICommand OpenExerciseListCommand { get; }
     public ICommand OpenStatisticsCommand { get; }
@@ -87,7 +92,6 @@ public class MainWindowViewModel : BaseViewModel
     public MainWindowViewModel(MongoDbContext dbContext)
     {
         IsStartVisible = true;
-        StartText = "Choose a user to start";
 
         ExerciseListVM = new ExerciseListViewModel(this, new ExerciseRepository(dbContext));
         ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext), this);
@@ -104,13 +108,26 @@ public class MainWindowViewModel : BaseViewModel
         OpenWorkoutListCommand = new RelayCommand(OpenWorkoutList);
         OpenWorkoutCommand = new RelayCommand(OpenWorkout);
         OpenOptionsMenuCommand = new RelayCommand(OpenOptionsMenu);
-    }
 
+        SetCurrentUserStatus();
+    }
     private void OpenOptionsMenu(object obj)
     {
         IsOptionsMenuOpen = !IsOptionsMenuOpen;
     }
-
+    public void SetCurrentUserStatus()
+    {
+        if (UserVM.User != null)
+        {
+            CurrentUserStatus = $"{UserVM.User.UserName}";
+            StartText = $"{UserVM.User.UserName} is logged in";
+        }
+        else
+        {
+            CurrentUserStatus = "Offline";
+            StartText = "Choose a user to start";
+        }
+    }
     private void SetViewVisibility(Action setVisible)
     {
         IsStartVisible = false;
