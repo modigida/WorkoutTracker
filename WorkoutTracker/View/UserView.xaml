@@ -30,14 +30,18 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <TextBlock Text="Goals" FontSize="24"/>
-            <ListView FontSize="24" DataContext="{Binding UserVM}" ItemsSource="{Binding User.FavoriteExercises}" Grid.Row="1" >
+            <ListView 
+                DataContext="{Binding UserVM}" 
+                ItemsSource="{Binding FavoriteExercises}" 
+                SelectedItem="{Binding SelectedFavoriteExercise, UpdateSourceTrigger=PropertyChanged}" 
+                Grid.Row="1" FontSize="18" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="200"/>
                                 <ColumnDefinition Width="90"/>
-                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition Width="70"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding ExerciseName}" />
@@ -45,7 +49,11 @@
                                 <TextBlock Text="{Binding TargetWeight}" />
                                 <TextBlock Text="kg" Margin="5,0,0,0" />
                             </StackPanel>
-                            <Button Content="D" Grid.Column="2" BorderThickness='0' HorizontalContentAlignment="Right" />
+                            <Button 
+                                Content="D" 
+                                Command="{Binding DataContext.DeleteFavoriteExerciseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                CommandParameter="{Binding}" 
+                                Grid.Column="2" BorderThickness='0' HorizontalContentAlignment="Right" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -61,7 +69,7 @@
 
                 <ComboBox ItemsSource="{Binding UserVM.AvailableExercises}" 
                     Text="{Binding UserVM.AddedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    SelectedItem="{Binding UserVM.SelectedFavoriteExercise, UpdateSourceTrigger=PropertyChanged}" 
+                    SelectedItem="{Binding UserVM.SelectedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     VerticalContentAlignment="Center" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -83,12 +91,12 @@
             </Grid.RowDefinitions>
             
             <TextBlock Text="Personal Records" FontSize="24" />
-            <ListView FontSize="24" DataContext="{Binding UserVM}" ItemsSource="{Binding PersonalRecords}" Grid.Row="1" >
+            <ListView FontSize="18" DataContext="{Binding UserVM}" ItemsSource="{Binding PersonalRecords}" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="200"/>
                                 <ColumnDefinition Width="90"/>
                                 <ColumnDefinition Width="90"/>
                             </Grid.ColumnDefinitions>

@@ -145,23 +145,15 @@ public class UserViewModel : BaseViewModel
         {
             AvailableExercises = new ObservableCollection<FavoriteExercise>();
         }
-        if (FavoriteExercises == null)
-        {
-            FavoriteExercises = new ObservableCollection<FavoriteExercise>();
-        }
+
+        var favoriteExerciseNames = new HashSet<string>(FavoriteExercises.Select(fav => fav.ExerciseName));
+
+        var exercisesToAdd = Exercises.Where(ex => !favoriteExerciseNames.Contains(ex.ExerciseName));
 
         AvailableExercises.Clear();
-
-        foreach (var exercise in Exercises)
+        foreach (var exercise in exercisesToAdd)
         {
-            if (NewUser.FavoriteExercises == null && User.FavoriteExercises != null && !User.FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
-            {
-                AvailableExercises.Add(exercise);
-            }
-            if (FavoriteExercises != null && !FavoriteExercises.Any(fav => fav.ExerciseName == exercise.ExerciseName))
-            {
-                AvailableExercises.Add(exercise);
-            }
+            AvailableExercises.Add(exercise);
         }
     }
     private void AddNewUserFavoriteExercise(object obj)
@@ -202,6 +194,8 @@ public class UserViewModel : BaseViewModel
     public async Task GetUser(string userId)
     {
         User = await _userRepository.GetByIdAsync(userId);
+        FavoriteExercises = new ObservableCollection<FavoriteExercise>(User.FavoriteExercises);
+        await GetExercises();
         CalculatePersonalRecords();
     }
 
@@ -265,6 +259,7 @@ public class UserViewModel : BaseViewModel
     }
     private async void SaveUser(object obj)
     {
+        User.FavoriteExercises = FavoriteExercises.ToList();
         await _userRepository.UpdateAsync(User.Id, User);
     }
     private async void DeleteUser(object obj)
