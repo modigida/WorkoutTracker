@@ -146,14 +146,25 @@ public class UserViewModel : BaseViewModel
             AvailableExercises = new ObservableCollection<FavoriteExercise>();
         }
 
-        var favoriteExerciseNames = new HashSet<string>(FavoriteExercises.Select(fav => fav.ExerciseName));
-
-        var exercisesToAdd = Exercises.Where(ex => !favoriteExerciseNames.Contains(ex.ExerciseName));
-
-        AvailableExercises.Clear();
-        foreach (var exercise in exercisesToAdd)
+        if (FavoriteExercises != null)
         {
-            AvailableExercises.Add(exercise);
+            var favoriteExerciseNames = new HashSet<string>(FavoriteExercises.Select(fav => fav.ExerciseName));
+
+            var exercisesToAdd = Exercises.Where(ex => !favoriteExerciseNames.Contains(ex.ExerciseName));
+
+            AvailableExercises.Clear();
+            foreach (var exercise in exercisesToAdd)
+            {
+                AvailableExercises.Add(exercise);
+            }
+        }
+        else
+        {
+            AvailableExercises.Clear();
+            foreach (var exercise in Exercises)
+            {
+                AvailableExercises.Add(exercise);
+            }
         }
     }
     private void AddNewUserFavoriteExercise(object obj)

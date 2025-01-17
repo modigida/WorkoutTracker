@@ -20,6 +20,7 @@
             <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
         </Style>
 
         <Style TargetType="TextBlock">
@@ -42,24 +43,5 @@
             <Setter Property="Padding" Value="5" />
         </Style>
 
-        <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
-        <Style TargetType="ComboBoxItem">
-            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource GlobalComponentColor}"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-        
-        <Style TargetType="CheckBox">
-            <Setter Property="Background" Value="{StaticResource GlobalForegroundColor}"/>
-            <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
-            <Setter Property="BorderBrush" Value="Transparent"/>
-        </Style>
     </Application.Resources>
 </Application>

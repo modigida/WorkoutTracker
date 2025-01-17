@@ -34,7 +34,7 @@
                 DataContext="{Binding UserVM}" 
                 ItemsSource="{Binding FavoriteExercises}" 
                 SelectedItem="{Binding SelectedFavoriteExercise, UpdateSourceTrigger=PropertyChanged}" 
-                Grid.Row="1" FontSize="18" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+                Grid.Row="1" FontSize="18" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -71,9 +71,13 @@
                     Text="{Binding UserVM.AddedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedItem="{Binding UserVM.SelectedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     VerticalContentAlignment="Center" >
-                    <ComboBox.ItemTemplate>
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
+                </ComboBox.Resources>
+                <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ExerciseName}"/>
+                        <TextBlock Text="{Binding ExerciseName}" Foreground="#414141"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -91,7 +95,7 @@
             </Grid.RowDefinitions>
             
             <TextBlock Text="Personal Records" FontSize="24" />
-            <ListView FontSize="18" DataContext="{Binding UserVM}" ItemsSource="{Binding PersonalRecords}" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+            <ListView FontSize="18" DataContext="{Binding UserVM}" ItemsSource="{Binding PersonalRecords}" Grid.Row="1" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

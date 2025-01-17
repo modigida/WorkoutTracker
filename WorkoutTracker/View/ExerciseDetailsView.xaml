@@ -57,7 +57,7 @@
                 DataContext="{Binding ExerciseDetailsVM}"
                 ItemsSource="{Binding ExercisesMuscleGroups}" 
                 SelectedItem="{Binding SelectedMuscleGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                HorizontalAlignment="Stretch" FontSize="14" Grid.Row="5" ScrollViewer.HorizontalScrollBarVisibility="Hidden" >
+                HorizontalAlignment="Stretch" FontSize="14" Grid.Row="5" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -87,12 +87,12 @@
                     SelectedItem="{Binding ExerciseDetailsVM.SelectedMuscleGroup}"
                     FontSize="14" >
                 <ComboBox.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#80414141" />
+                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
                 </ComboBox.Resources>
                 <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding MuscleGroupName}"/>
+                        <TextBlock Text="{Binding MuscleGroupName}" Foreground="#414141"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
