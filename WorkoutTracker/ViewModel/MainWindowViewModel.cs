@@ -93,7 +93,7 @@ public class MainWindowViewModel : BaseViewModel
         ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext));
         StatisticsVM = new StatisticsViewModel();
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext));
-        WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext));
+        WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext), this);
         WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM);
         WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext));
 
@@ -161,6 +161,7 @@ public class MainWindowViewModel : BaseViewModel
     public async void OpenWorkoutDetails(Workout workout)
     {
         await WorkoutDetailsVM.GetWorkout(workout);
+        WorkoutListVM.SelectedWorkout = null;
         SetViewVisibility(() => IsWorkoutDetailsVisible = true);
     }
 }

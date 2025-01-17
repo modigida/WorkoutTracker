@@ -56,15 +56,15 @@
                 DataContext="{Binding ExerciseDetailsVM}"
                 ItemsSource="{Binding Exercise.MuscleGroups}" 
                 SelectedItem="{Binding SelectedMuscleGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                HorizontalAlignment="Left" FontSize="14">
+                HorizontalAlignment="Stretch" FontSize="14" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="275"/>
+                                <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding}"/>
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
                             <Button 
                                 Content="Delete"
                                 Grid.Column="1" 

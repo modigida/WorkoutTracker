@@ -41,14 +41,12 @@
                 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" >
                     <TextBox Text="{Binding WorkoutVM.Weight}" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
-                        <!-- Bind to weight -->
                     </TextBox>
                     <TextBlock Text="kg" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" >
                     <TextBox Text="{Binding WorkoutVM.Reps}" VerticalContentAlignment="Center" Width="30" HorizontalContentAlignment="Right" >
-                        <!-- Bind to reps -->
                     </TextBox>
                     <TextBlock Text="reps" VerticalAlignment="Center" />
                 </StackPanel>
@@ -68,12 +66,10 @@
                                 <ColumnDefinition Width="110"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- Exercise Name -->
                             <TextBlock Text="{Binding ExerciseName}"
                                 VerticalAlignment="Center"
                                 Grid.Column="0" />
 
-                            <!-- Sets -->
                             <ItemsControl ItemsSource="{Binding Sets}"
                                 Grid.Column="1"
                                 HorizontalContentAlignment="Stretch">
@@ -85,7 +81,6 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Weight -->
                                             <StackPanel Orientation="Horizontal" Grid.Column="0" >
                                                 <TextBlock Text="{Binding Weight}"
                                                 VerticalAlignment="Center"
@@ -93,7 +88,6 @@
                                                 <TextBlock Text="kg" Margin="5,0,0,0" />
                                             </StackPanel>
 
-                                            <!-- Reps -->
                                             <StackPanel Orientation="Horizontal" Grid.Column="1">
                                                 <TextBlock Text="{Binding Reps}"
                                                 VerticalAlignment="Center"

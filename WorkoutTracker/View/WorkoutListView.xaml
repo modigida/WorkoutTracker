@@ -14,12 +14,12 @@
 
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Workouts" FontSize="24" Margin="5" />
-            <!-- Add ComboBox to order workout by date or favorite -->
         </StackPanel>
         <ListView 
             Grid.Row="1" 
             DataContext="{Binding WorkoutListVM}"
-            ItemsSource="{Binding Workouts}" >
+            ItemsSource="{Binding Workouts}"
+            SelectedItem="{Binding SelectedWorkout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Date}" />
