@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WorkoutTracker.View" 
              xmlns:converters="clr-namespace:WorkoutTracker.Converters" 
              xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
@@ -63,16 +64,21 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="250"/>
-                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="80"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding MuscleGroupName}" />
-                            <Button 
-                                Content="Delete"
-                                Grid.Column="1" 
-                                Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                CommandParameter="{Binding}" />
+                        <Button 
+                            BorderThickness="0"
+                            HorizontalAlignment="Right"
+                            Grid.Column="1" 
+                            Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                            CommandParameter="{Binding}" >
+                            <Button.Content>
+                                <fa:IconBlock Icon="TrashCan" />
+                            </Button.Content>
+                        </Button>
 
-                        </Grid>
+                    </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

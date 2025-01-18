@@ -31,6 +31,12 @@ public class MainWindowViewModel : BaseViewModel
             }
         }
     }
+    private bool _isMenuEnabled = true;
+    public bool IsMenuEnabled
+    {
+        get => _isMenuEnabled;
+        set => SetProperty(ref _isMenuEnabled, value);
+    }
     private bool _isAvailable;
     public bool IsAvailable
     {

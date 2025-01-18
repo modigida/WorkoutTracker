@@ -80,6 +80,7 @@ public class WorkoutViewModel : BaseViewModel
     public async Task StartNewWorkout(string userId)
     {
         _mainWindowViewModel.IsAvailable = false;
+        _mainWindowViewModel.IsMenuEnabled = false;
 
         await _exerciseListViewModel.GetExerciseNames();
 
@@ -175,6 +176,8 @@ public class WorkoutViewModel : BaseViewModel
         await _workoutRepository.CreateAsync(Workout);
 
         _mainWindowViewModel.IsAvailable = true;
+        _mainWindowViewModel.IsMenuEnabled = true;
+
         _mainWindowViewModel.OpenWorkoutDetails(Workout);
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WorkoutTracker.View.Dialogs" 
         xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
         mc:Ignorable="d"
         Title="Create User" Height="250" Width="250"
@@ -31,7 +32,7 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="140"/>
+                                <ColumnDefinition Width="160"/>
                                 <ColumnDefinition Width="25"/>
                                 <ColumnDefinition Width="25"/>
                             </Grid.ColumnDefinitions>
@@ -39,10 +40,15 @@
                             <TextBlock Text="{Binding ExerciseName}" />
                             <TextBlock Text="{Binding TargetWeight}" Grid.Column="1" />
                             <Button 
-                                Content="X" 
                                 Command="{Binding DataContext.DeleteFavoriteExerciseCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
                                 CommandParameter="{Binding}"
-                                Grid.Column="2" />
+                                Grid.Column="2"
+                                BorderThickness="0"
+                                HorizontalAlignment="Right">
+                                <Button.Content>
+                                    <fa:IconBlock Icon="TrashCan" />
+                                </Button.Content>
+                            </Button>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

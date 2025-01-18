@@ -32,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <ToggleButton Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" Margin="5,0" BorderThickness="0" Height="24" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
+                <ToggleButton IsEnabled="{Binding IsMenuEnabled}" Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" Margin="5,0" BorderThickness="0" Height="24" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
                 <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
                     <StackPanel Background="#80414141">
                         <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" HorizontalContentAlignment="Left"/>

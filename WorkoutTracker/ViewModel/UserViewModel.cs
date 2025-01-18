@@ -269,6 +269,13 @@ public class UserViewModel : BaseViewModel
     }
     private async void DeleteUser(object obj)
     {
+        var finish = MessageBox.Show($"Delete user {User.UserName}?",
+                                            "Confirm",
+                                            MessageBoxButton.YesNo,
+                                            MessageBoxImage.Question);
+
+        if (finish != MessageBoxResult.Yes) return;
+
         await _userRepository.DeleteAsync(User.Id);
         Logout(null);
     }
