@@ -11,6 +11,8 @@ public class WorkoutViewModel : BaseViewModel
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ExerciseListViewModel _exerciseListViewModel;
     private readonly WorkoutRepository _workoutRepository;
+    private readonly UserViewModel _userViewModel;
+    private readonly PersonalRecordRepository _personalRecordRepository;
 
     private Exercise _selectedExercise;
     public Exercise SelectedExercise
@@ -66,13 +68,22 @@ public class WorkoutViewModel : BaseViewModel
         get => _totalReps;
         set => SetProperty(ref _totalReps, value);
     }
+    private ObservableCollection<PersonalRecord> _personalRecords;
+    public ObservableCollection<PersonalRecord> PersonalRecords
+    {
+        get => _personalRecords;
+        set => SetProperty(ref _personalRecords, value);
+    }
     public ICommand SaveWorkoutExerciseCommand { get; }
     public ICommand FinishWorkoutCommand { get; }
-    public WorkoutViewModel(MainWindowViewModel mainWindowViewModel, WorkoutRepository workoutRepository, ExerciseListViewModel exerciseListViewModel)
+    public WorkoutViewModel(MainWindowViewModel mainWindowViewModel, WorkoutRepository workoutRepository, 
+        ExerciseListViewModel exerciseListViewModel, UserViewModel userViewModel, PersonalRecordRepository personalRecordRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
         _workoutRepository = workoutRepository;
         _exerciseListViewModel = exerciseListViewModel;
+        _userViewModel = userViewModel;
+        _personalRecordRepository = personalRecordRepository;
 
         SaveWorkoutExerciseCommand = new RelayCommand(SaveWorkoutExercise);
         FinishWorkoutCommand = new RelayCommand(FinishWorkout);
@@ -83,6 +94,7 @@ public class WorkoutViewModel : BaseViewModel
         _mainWindowViewModel.IsMenuEnabled = false;
 
         await _exerciseListViewModel.GetExerciseNames();
+        await GetPersonalRecords();
 
         Workout = new Workout
         {
@@ -93,7 +105,12 @@ public class WorkoutViewModel : BaseViewModel
         };
         WorkoutExercises = new ObservableCollection<WorkoutExercise>();
     }
-    private void SaveWorkoutExercise(object obj)
+    private async Task GetPersonalRecords()
+    {
+        var personalRecords = await _personalRecordRepository.GetBestRecordsAsync(_userViewModel.User.Id);
+        PersonalRecords = new ObservableCollection<PersonalRecord>(personalRecords);
+    }
+    private async void SaveWorkoutExercise(object obj)
     {
         WorkoutExercises.Add(new WorkoutExercise
         {
@@ -107,6 +124,19 @@ public class WorkoutViewModel : BaseViewModel
                 }
             }
         });
+
+        if (!PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName) ||
+            PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName && pr.MaxWeight < Weight))
+        {
+            var personalRecord = new PersonalRecord
+            {
+                UserId = _userViewModel.User.Id,
+                ExerciseName = SelectedExercise.ExerciseName,
+                MaxWeight = Weight,
+                DateAchieved = DateTime.Now
+            };
+            await SavePersonalRecord(personalRecord);
+        }
 
         CountTotalWeight();
         CountTotalSets();
@@ -179,5 +209,10 @@ public class WorkoutViewModel : BaseViewModel
         _mainWindowViewModel.IsMenuEnabled = true;
 
         _mainWindowViewModel.OpenWorkoutDetails(Workout);
+    }
+    private async Task SavePersonalRecord(PersonalRecord personalRecord)
+    {
+        await _personalRecordRepository.CreateAsync(personalRecord);
+        await GetPersonalRecords();
     }
 }

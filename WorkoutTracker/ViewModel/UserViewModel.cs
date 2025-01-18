@@ -12,6 +12,7 @@ public class UserViewModel : BaseViewModel
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ExerciseRepository _exerciseRepository;
     private readonly UserRepository _userRepository;
+    private readonly PersonalRecordRepository _personalRecordRepository;
 
     private ChangeUserDialog changeUser;
     private AddNewUserDialog addNewUser;
@@ -42,7 +43,6 @@ public class UserViewModel : BaseViewModel
         get => _personalRecords;
         set => SetProperty(ref _personalRecords, value);
     }
-
     // ChangeUserDialog
     private User _selectedUser;
     public User SelectedUser
@@ -109,11 +109,13 @@ public class UserViewModel : BaseViewModel
     public ICommand LogoutCommand { get; }
     public ICommand SaveUserCommand { get; }
     public ICommand DeleteUserCommand { get; }
-    public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository, ExerciseRepository exerciseRepository)
+    public UserViewModel(MainWindowViewModel mainWindowViewModel, UserRepository userRepository, 
+        ExerciseRepository exerciseRepository, PersonalRecordRepository personalRecordRepository)
     {
         _mainWindowViewModel = mainWindowViewModel;
         _userRepository = userRepository;
         _exerciseRepository = exerciseRepository;
+        _personalRecordRepository = personalRecordRepository;
 
         ChangeUserCommand = new RelayCommand(ChangeUser);
         AddNewUserCommand = new RelayCommand(AddNewUser);
@@ -202,21 +204,11 @@ public class UserViewModel : BaseViewModel
         await GetExercises();
         CalculatePersonalRecords();
     }
-
-    private void CalculatePersonalRecords()
+    private async void CalculatePersonalRecords()
     {
-        PersonalRecords = new ObservableCollection<PersonalRecord>
-        {
-            new PersonalRecord
-            {
-                ExerciseName = "Bench Press",
-                MaxWeight = 39.5,
-                DateAchieved = DateTime.Now
-            }
-        };
-        // Foreach registered exercise, highest rep-weight.
+        var personalRecords = await _personalRecordRepository.GetBestRecordsAsync(User.Id);
+        PersonalRecords = new ObservableCollection<PersonalRecord>(personalRecords);
     }
-
     private void ChangeUser(object obj)
     {
         GetUsers();
