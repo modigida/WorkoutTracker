@@ -79,6 +79,8 @@ public class WorkoutViewModel : BaseViewModel
     }
     public async Task StartNewWorkout(string userId)
     {
+        _mainWindowViewModel.IsAvailable = false;
+
         await _exerciseListViewModel.GetExerciseNames();
 
         Workout = new Workout
@@ -172,6 +174,7 @@ public class WorkoutViewModel : BaseViewModel
 
         await _workoutRepository.CreateAsync(Workout);
 
+        _mainWindowViewModel.IsAvailable = true;
         _mainWindowViewModel.OpenWorkoutDetails(Workout);
     }
 }

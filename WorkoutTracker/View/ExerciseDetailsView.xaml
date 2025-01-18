@@ -69,7 +69,7 @@
                             <Button 
                                 Content="Delete"
                                 Grid.Column="1" 
-                                Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                Command="{Binding DataContext.DeleteMuscleGroupCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                 CommandParameter="{Binding}" />
 
                         </Grid>

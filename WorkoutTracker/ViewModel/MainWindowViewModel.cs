@@ -14,6 +14,29 @@ public class MainWindowViewModel : BaseViewModel
     public WorkoutListViewModel WorkoutListVM { get; set; }
     public WorkoutViewModel WorkoutVM { get; set; }
     public WorkoutDetailsViewModel WorkoutDetailsVM { get; set; }
+    private bool _isOnline;
+    public bool IsOnline
+    {
+        get => _isOnline;
+        set
+        {
+            SetProperty(ref _isOnline, value);
+            if (!IsOnline)
+            {
+                IsAvailable = false;
+            }
+            else
+            {
+                IsAvailable = true;
+            }
+        }
+    }
+    private bool _isAvailable;
+    public bool IsAvailable
+    {
+        get => _isAvailable;
+        set => SetProperty(ref _isAvailable, value);
+    }
     private string _currentUserStatus;
     public string CurrentUserStatus
     {
@@ -121,11 +144,13 @@ public class MainWindowViewModel : BaseViewModel
         {
             CurrentUserStatus = $"{UserVM.User.UserName}";
             StartText = $"{UserVM.User.UserName} is logged in";
+            IsOnline = true;
         }
         else
         {
             CurrentUserStatus = "Offline";
             StartText = "Choose a user to start";
+            IsOnline = false;
         }
     }
     private void SetViewVisibility(Action setVisible)

@@ -19,14 +19,7 @@ public class UserViewModel : BaseViewModel
     private User _user;
     public User User
     {
-        get
-        {
-            if (_user == null)
-            {
-                _user = new User { UserName = "Offline" };
-            }
-            return _user;
-        }
+        get => _user;
         set => SetProperty(ref _user, value);
     }
     private ObservableCollection<User> _users;
@@ -258,9 +251,9 @@ public class UserViewModel : BaseViewModel
         User.FavoriteExercises = new List<FavoriteExercise>(FavoriteExercises);
         await _userRepository.CreateAsync(User);
         _mainWindowViewModel.SetCurrentUserStatus();
+        addNewUser.Close();
         NewUser = null;
         FavoriteExercises.Clear();
-        addNewUser.Close();
     }
     private void Logout(object obj)
     {

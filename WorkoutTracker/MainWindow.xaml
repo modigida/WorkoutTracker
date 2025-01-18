@@ -32,18 +32,18 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <ToggleButton x:Name="OptionsButton" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
+                <ToggleButton Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" Margin="5,0" BorderThickness="0" Height="24" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
                 <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
-                    <StackPanel Background="Gray">
+                    <StackPanel Background="#80414141">
                         <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" HorizontalContentAlignment="Left"/>
                         <Button Content="Add New User" Command="{Binding UserVM.AddNewUserCommand}" HorizontalContentAlignment="Left"/>
-                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" IsEnabled="{Binding IsOnline}" HorizontalContentAlignment="Left"/>
                     </StackPanel>
                 </Popup>
             </StackPanel>
-            
-            <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" HorizontalAlignment="Right"/>
-            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+
+            <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" IsEnabled="{Binding IsAvailable}" HorizontalAlignment="Right" BorderThickness="0" />
+            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" IsEnabled="{Binding IsAvailable}" HorizontalAlignment="Right" BorderThickness="0"  Margin="0,0,5,0"/>
         </Grid>
 
         <Image Source="pack://application:,,,/WorkoutTracker;component/Resources/Background.jpg" Stretch="Fill" Grid.Row="1" />
@@ -64,9 +64,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}" />
-            <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}"/>
-            <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}"/>
+            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}" IsEnabled="{Binding IsOnline}" BorderThickness="0" />
+            <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
+            <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
         </Grid>
     </Grid>
 </Window>
