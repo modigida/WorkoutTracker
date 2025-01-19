@@ -20,11 +20,18 @@ public class WorkoutViewModel : BaseViewModel
         get => _selectedExercise;
         set => SetProperty(ref _selectedExercise, value);
     }
-    private WorkoutExercise _newWorkoutExercise;
-    public WorkoutExercise NewWorkoutExercise
+    private WorkoutExercise _selectedWorkoutExercise;
+    public WorkoutExercise SelectedWorkoutExercise
     {
-        get => _newWorkoutExercise;
-        set => SetProperty(ref _newWorkoutExercise, value);
+        get => _selectedWorkoutExercise;
+        set
+        {
+            SetProperty(ref _selectedWorkoutExercise, value);
+            if (SelectedWorkoutExercise != null)
+            {
+                PrintSetToEdit();
+            }
+        }
     }
     private double _weight = 0;
     public double Weight
@@ -110,7 +117,44 @@ public class WorkoutViewModel : BaseViewModel
         var personalRecords = await _personalRecordRepository.GetBestRecordsAsync(_userViewModel.User.Id);
         PersonalRecords = new ObservableCollection<PersonalRecord>(personalRecords);
     }
-    private async void SaveWorkoutExercise(object obj)
+    private void SaveWorkoutExercise(object obj)
+    {
+        if (SelectedWorkoutExercise != null && SelectedWorkoutExercise.ExerciseName == SelectedExercise.ExerciseName)
+        {
+            var existingExercise = WorkoutExercises.FirstOrDefault(we => we.ExerciseName == SelectedWorkoutExercise.ExerciseName);
+            if (existingExercise != null)
+            {
+                var existingSet = existingExercise.Sets.FirstOrDefault(set => set.Weight == SelectedWorkoutExercise.Sets.FirstOrDefault().Weight 
+                && set.Reps == SelectedWorkoutExercise.Sets.FirstOrDefault().Reps);
+
+                if (existingSet != null)
+                {
+                    WorkoutExercises.Remove(existingExercise);
+                    existingSet.Weight = Weight;
+                    existingSet.Reps = Reps;
+                    WorkoutExercises.Add(existingExercise);
+                }
+                else
+                {
+                    CreateWorkoutExercise();
+                }
+            }
+        }
+        else
+        {
+            CreateWorkoutExercise();
+        }
+
+        ManagePersonalRecord();
+        CountTotalWeight();
+        CountTotalSets();
+        CountTotalReps();
+
+        SelectedExercise = null;
+        Weight = 0;
+        Reps = 0;
+    }
+    private void CreateWorkoutExercise()
     {
         WorkoutExercises.Add(new WorkoutExercise
         {
@@ -124,7 +168,9 @@ public class WorkoutViewModel : BaseViewModel
                 }
             }
         });
-
+    }
+    private async void ManagePersonalRecord()
+    {
         if (!PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName) ||
             PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName && pr.MaxWeight < Weight))
         {
@@ -137,14 +183,18 @@ public class WorkoutViewModel : BaseViewModel
             };
             await SavePersonalRecord(personalRecord);
         }
+    }
 
-        CountTotalWeight();
-        CountTotalSets();
-        CountTotalReps();
+    private void PrintSetToEdit()
+    {
+        SelectedExercise = _exerciseListViewModel.Exercises.FirstOrDefault(e => e.ExerciseName == SelectedWorkoutExercise.ExerciseName);
 
-        SelectedExercise = null;
-        Weight = 0;
-        Reps = 0;
+        var firstSet = SelectedWorkoutExercise.Sets.FirstOrDefault();
+        if (firstSet != null)
+        {
+            Weight = firstSet.Weight;
+            Reps = firstSet.Reps;
+        }
     }
     private void CountTotalWeight()
     {

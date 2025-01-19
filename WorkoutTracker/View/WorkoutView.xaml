@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkoutTracker.View" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+             xmlns:local="clr-namespace:WorkoutTracker.View" 
+             xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
     <Grid>
@@ -64,6 +66,7 @@
         <ListView 
             DataContext="{Binding WorkoutVM}"
             ItemsSource="{Binding WorkoutExercises}"
+            SelectedItem="{Binding SelectedWorkoutExercise}"
             Margin="5"
             Grid.Row="2">
             <ListView.ItemTemplate>
@@ -89,13 +92,13 @@
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Orientation="Horizontal" Grid.Column="0" >
-                                            <TextBlock Text="{Binding Weight}"
+                                            <TextBlock Text="{Binding Weight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             HorizontalAlignment="Left" />
                                             <TextBlock Text="kg" Margin="5,0,0,0" />
                                         </StackPanel>
 
                                         <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                            <TextBlock Text="{Binding Reps}"
+                                            <TextBlock Text="{Binding Reps, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             HorizontalAlignment="Left"
                                             Margin="5,0,0,0" />
                                             <TextBlock Text="reps" Margin="5,0,0,0" />
