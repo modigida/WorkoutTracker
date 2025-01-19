@@ -114,6 +114,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand OpenExerciseDetailsCommand { get; }
     public ICommand OpenExerciseListCommand { get; }
     public ICommand OpenStatisticsCommand { get; }
+    public ICommand AddNewUserCommand { get; }
     public ICommand OpenUserCommand { get; }
     public ICommand OpenWorkoutListCommand { get; }
     public ICommand OpenWorkoutCommand { get; }
@@ -133,6 +134,7 @@ public class MainWindowViewModel : BaseViewModel
         OpenExerciseDetailsCommand = new RelayCommand(OpenExerciseDetails);
         OpenExerciseListCommand = new RelayCommand(OpenExerciseList);
         OpenStatisticsCommand = new RelayCommand(OpenStatistics);
+        AddNewUserCommand = new RelayCommand(AddNewUser);
         OpenUserCommand = new RelayCommand(OpenUser);
         OpenWorkoutListCommand = new RelayCommand(OpenWorkoutList);
         OpenWorkoutCommand = new RelayCommand(OpenWorkout);
@@ -191,6 +193,22 @@ public class MainWindowViewModel : BaseViewModel
     private void OpenStatistics(object obj)
     {
         SetViewVisibility(() => IsStatisticsVisible = true);
+    }
+    private async void AddNewUser(object obj)
+    {
+        if (UserVM.FavoriteExercises != null)
+        {
+            UserVM.FavoriteExercises.Clear();
+        }
+        UserVM.User = new User
+        {
+            UserName = "New User",
+            DateJoined = DateTime.Now,
+            FavoriteExercises = new List<FavoriteExercise>()
+        };
+        await UserVM.GetExercises();
+        SetViewVisibility(() => IsUserVisible = true);
+        IsOptionsMenuOpen = false;
     }
     private async void OpenUser(object obj)
     {

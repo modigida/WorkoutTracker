@@ -15,7 +15,6 @@ public class UserViewModel : BaseViewModel
     private readonly PersonalRecordRepository _personalRecordRepository;
 
     private ChangeUserDialog changeUser;
-    private AddNewUserDialog addNewUser;
 
     private User _user;
     public User User
@@ -43,7 +42,6 @@ public class UserViewModel : BaseViewModel
         get => _personalRecords;
         set => SetProperty(ref _personalRecords, value);
     }
-    // ChangeUserDialog
     private User _selectedUser;
     public User SelectedUser
     {
@@ -59,8 +57,6 @@ public class UserViewModel : BaseViewModel
             }
         }
     }
-
-    // AddNewUserDialog
     private string _addedFavoriteExercise;
     public string AddedFavoriteExercise
     {
@@ -88,13 +84,6 @@ public class UserViewModel : BaseViewModel
         get => _targetWeight;
         set => SetProperty(ref _targetWeight, value);
     }
-
-    private User _newUser;
-    public User NewUser
-    {
-        get => _newUser;
-        set => SetProperty(ref _newUser, value);
-    }
     private ObservableCollection<FavoriteExercise> _favoriteExercises;
     public ObservableCollection<FavoriteExercise> FavoriteExercises
     {
@@ -102,10 +91,8 @@ public class UserViewModel : BaseViewModel
         set => SetProperty(ref _favoriteExercises, value);
     }
     public ICommand ChangeUserCommand { get; }
-    public ICommand AddNewUserCommand { get; }
     public ICommand AddFavoriteExerciseCommand { get; }
     public ICommand DeleteFavoriteExerciseCommand { get; }
-    public ICommand SaveAddNewUserCommand { get; }
     public ICommand LogoutCommand { get; }
     public ICommand SaveUserCommand { get; }
     public ICommand DeleteUserCommand { get; }
@@ -118,15 +105,13 @@ public class UserViewModel : BaseViewModel
         _personalRecordRepository = personalRecordRepository;
 
         ChangeUserCommand = new RelayCommand(ChangeUser);
-        AddNewUserCommand = new RelayCommand(AddNewUser);
         AddFavoriteExerciseCommand = new RelayCommand(AddNewUserFavoriteExercise);
         DeleteFavoriteExerciseCommand = new RelayCommand<FavoriteExercise>(async favoriteExercise => await DeleteFavoriteExercise(favoriteExercise));
-        SaveAddNewUserCommand = new RelayCommand(SaveAddNewUser);
         LogoutCommand = new RelayCommand(Logout);
         SaveUserCommand = new RelayCommand(SaveUser);
         DeleteUserCommand = new RelayCommand(DeleteUser);
     }
-    private async Task GetExercises()
+    public async Task GetExercises()
     {
         var exerciseNames = await _exerciseRepository.GetAllExerciseNamesAsync();
         var exercises = exerciseNames.Select(name => new FavoriteExercise { ExerciseName = name }).ToList();
@@ -224,29 +209,6 @@ public class UserViewModel : BaseViewModel
         _mainWindowViewModel.OpenStartView();
         changeUser.Close();
     }
-    private async void AddNewUser(object obj)
-    {
-        NewUser = new User
-        {
-            UserName = "New User",
-            FavoriteExercises = new List<FavoriteExercise>()
-        };
-        await GetExercises();
-        addNewUser = new AddNewUserDialog(Application.Current.MainWindow, _mainWindowViewModel);
-        addNewUser.ShowDialog();
-        _mainWindowViewModel.IsOptionsMenuOpen = false;
-    }
-    private async void SaveAddNewUser(object obj)
-    {
-        User = NewUser;
-        User.DateJoined = DateTime.Now;
-        User.FavoriteExercises = new List<FavoriteExercise>(FavoriteExercises);
-        await _userRepository.CreateAsync(User);
-        _mainWindowViewModel.SetCurrentUserStatus();
-        addNewUser.Close();
-        NewUser = null;
-        FavoriteExercises.Clear();
-    }
     private void Logout(object obj)
     {
         User = null;
@@ -257,7 +219,15 @@ public class UserViewModel : BaseViewModel
     private async void SaveUser(object obj)
     {
         User.FavoriteExercises = FavoriteExercises.ToList();
-        await _userRepository.UpdateAsync(User.Id, User);
+        if (User.Id != null)
+        {
+            await _userRepository.UpdateAsync(User.Id, User);
+        }
+        else
+        {
+            await _userRepository.CreateAsync(User);
+            _mainWindowViewModel.SetCurrentUserStatus();
+        }
     }
     private async void DeleteUser(object obj)
     {

@@ -15,7 +15,7 @@
         <Grid>
             <TextBlock Text="Exercises" FontSize="24" Margin="5,0,0,0"/>
             <!-- Add ComboBox to order exercises by name or favorite -->
-            <Button Content="Add Exercise" Command="{Binding OpenExerciseDetailsCommand}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+            <Button Content="Add Exercise" Command="{Binding OpenExerciseDetailsCommand}" Style="{StaticResource StandardButtonStyling}" HorizontalAlignment="Right" Margin="0,0,5,0"/>
         </Grid>
         <ListView 
             Grid.Row="1" 

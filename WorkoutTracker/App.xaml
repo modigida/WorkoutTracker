@@ -36,12 +36,62 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
 
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource GlobalBackgroundColor}"/>
+        <Style TargetType="Button" x:Key="StandardButtonStyling">
+            <Setter Property="Background" Value="{StaticResource GlobalComponentColor}"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="Padding" Value="5" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
+        <Style TargetType="Button" x:Key="MenuButtonStyling" BasedOn="{StaticResource StandardButtonStyling}" >
+            <Setter Property="Background" Value="#272427"/>
+            <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Height" Value="25" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#272427" />
+                    <Setter Property="Background" Value="#272427" />
+                    <Setter Property="Opacity" Value="1" />
+                </Trigger>
+
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>
+                    <Setter Property="Background" Value="#272427"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>
+                    <Setter Property="Background" Value="#272427"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="ToggleButton">
+            <Setter Property="Background" Value="#272427"/>
+            <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
+            <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Height" Value="25" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#272427" />
+                    <Setter Property="Background" Value="#272427" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>
+                    <Setter Property="Background" Value="#272427"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>
+                    <Setter Property="Background" Value="#272427"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

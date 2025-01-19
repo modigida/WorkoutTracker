@@ -24,7 +24,7 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="#272427">
+        <Grid Grid.Row="0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -32,18 +32,18 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <ToggleButton IsEnabled="{Binding IsMenuEnabled}" Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" Margin="5,0" BorderThickness="0" Height="24" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
+                <ToggleButton IsEnabled="{Binding IsMenuEnabled}" Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" BorderThickness="0" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
                 <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
                     <StackPanel Background="#80414141">
-                        <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" HorizontalContentAlignment="Left"/>
-                        <Button Content="Add New User" Command="{Binding UserVM.AddNewUserCommand}" HorizontalContentAlignment="Left"/>
-                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" IsEnabled="{Binding IsOnline}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalContentAlignment="Stretch"/>
+                        <Button Content="Add New User" Command="{Binding AddNewUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsOnline}" HorizontalContentAlignment="Left"/>
                     </StackPanel>
                 </Popup>
             </StackPanel>
 
-            <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" IsEnabled="{Binding IsAvailable}" HorizontalAlignment="Right" BorderThickness="0" />
-            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" IsEnabled="{Binding IsAvailable}" HorizontalAlignment="Right" BorderThickness="0"  Margin="0,0,5,0"/>
+            <Button Content="User" Grid.Column="1" Command="{Binding OpenUserCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
+            <Button Content="Statistics" Grid.Column="2" Command="{Binding OpenStatisticsCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
         </Grid>
 
         <Image Source="pack://application:,,,/WorkoutTracker;component/Resources/Background.jpg" Stretch="Fill" Grid.Row="1" />
@@ -57,16 +57,16 @@
         <view:WorkoutView Grid.Row="1" Visibility="{Binding IsWorkoutVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:WorkoutDetailsView Grid.Row="1" Visibility="{Binding IsWorkoutDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-        <Grid Grid.Row="2" Background="#272427">
+        <Grid Grid.Row="2" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}" IsEnabled="{Binding IsOnline}" BorderThickness="0" />
-            <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
-            <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
+            <Button Content="New Workout" Grid.Column="0" Command="{Binding OpenWorkoutCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsOnline}" BorderThickness="0" />
+            <Button Content="Workouts" Grid.Column="1" Command="{Binding OpenWorkoutListCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
+            <Button Content="Exercises" Grid.Column="2" Command="{Binding OpenExerciseListCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsAvailable}" BorderThickness="0" />
         </Grid>
     </Grid>
 </Window>
