@@ -218,7 +218,16 @@ public class UserViewModel : BaseViewModel
     }
     private async void SaveUser(object obj)
     {
-        User.FavoriteExercises = FavoriteExercises.ToList();
+        if (FavoriteExercises == null)
+        {
+            User.FavoriteExercises = new List<FavoriteExercise>();
+        }
+        else
+        {
+            User.FavoriteExercises = FavoriteExercises.ToList();
+
+        }
+
         if (User.Id != null)
         {
             await _userRepository.UpdateAsync(User.Id, User);

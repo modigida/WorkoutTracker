@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Forms;
+using System.Windows.Markup;
 using WorkoutTracker.Model;
 using WorkoutTracker.Repository;
 
@@ -24,6 +26,25 @@ public class WorkoutDetailsViewModel : BaseViewModel
         get => _selectedExercise;
         set => SetProperty(ref _selectedExercise, value);
     }
+    private string _note;
+    public string Note
+    {
+        get => _note;
+        set
+        {
+            SetProperty(ref _note, value);
+            if (Note != Workout.Notes || Note != "Add note")
+            {
+                Workout.Notes = Note;
+                UpdateWorkout();
+            }
+        }
+    }
+
+    private async void UpdateWorkout()
+    {
+        await _workoutRepository.UpdateAsync(Workout.Id, Workout);
+    }
 
     private TimeSpan _workoutLength;
     public TimeSpan WorkoutLength
@@ -39,6 +60,8 @@ public class WorkoutDetailsViewModel : BaseViewModel
     {
         Workout = await _workoutRepository.GetByIdAsync(workout.Id);
         WorkoutLength = Workout.EndTime - Workout.Date;
+        Note = Workout.Notes;
+
         if (_workoutLength.TotalMinutes > 60)
         {
             _workoutLength = TimeSpan.FromMinutes(_workoutLength.TotalMinutes);

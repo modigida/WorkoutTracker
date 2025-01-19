@@ -77,6 +77,6 @@
         </Grid>
 
         <TextBlock Text="Notes" FontSize="24" Grid.Row="4"/>
-        <TextBox Text="{Binding WorkoutDetailsVM.Workout.Notes}" Grid.Row="5" Background="{StaticResource GlobalComponentColor}" VerticalContentAlignment="Top" BorderThickness="1" BorderBrush="#fffff0"/>
+        <TextBox Text="{Binding WorkoutDetailsVM.Note, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Grid.Row="5" Background="{StaticResource GlobalComponentColor}" VerticalContentAlignment="Top" BorderThickness="1" BorderBrush="#fffff0"/>
     </Grid>
 </UserControl>
