@@ -36,7 +36,7 @@
             <ListView 
                 DataContext="{Binding UserVM}" 
                 ItemsSource="{Binding FavoriteExercises}" 
-                SelectedItem="{Binding SelectedFavoriteExercise, UpdateSourceTrigger=PropertyChanged}" 
+                SelectedItem="{Binding SelectedFavoriteExercise, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}" 
                 Grid.Row="1" FontSize="18" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -74,8 +74,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox ItemsSource="{Binding UserVM.AvailableExercises}" 
-                    Text="{Binding UserVM.AddedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox 
+                    ItemsSource="{Binding UserVM.AvailableExercises}" 
                     SelectedItem="{Binding UserVM.SelectedFavoriteExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                     VerticalContentAlignment="Center" >
                 <ComboBox.Resources>

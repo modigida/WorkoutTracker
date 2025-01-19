@@ -57,12 +57,6 @@ public class UserViewModel : BaseViewModel
             }
         }
     }
-    private string _addedFavoriteExercise;
-    public string AddedFavoriteExercise
-    {
-        get => _addedFavoriteExercise;
-        set => SetProperty(ref _addedFavoriteExercise, value);
-    }
     private FavoriteExercise _selectedFavoriteExercise;
     public FavoriteExercise SelectedFavoriteExercise
     {
@@ -73,11 +67,20 @@ public class UserViewModel : BaseViewModel
             {
                 if (SelectedFavoriteExercise != null)
                 {
-                    AddedFavoriteExercise = SelectedFavoriteExercise.ExerciseName;
+                    PrintFavoriteExerciseToEdit();
                 }
             }
         }
     }
+    private void PrintFavoriteExerciseToEdit()
+    {
+        if (!AvailableExercises.Any(ae => ae.ExerciseName == SelectedFavoriteExercise.ExerciseName))
+        {
+            AvailableExercises.Add(SelectedFavoriteExercise);
+        }
+        TargetWeight = SelectedFavoriteExercise.TargetWeight;
+    }
+
     private double _targetWeight;
     public double TargetWeight
     {
@@ -154,15 +157,26 @@ public class UserViewModel : BaseViewModel
             FavoriteExercises = new ObservableCollection<FavoriteExercise>();
         }
 
-        if (AddedFavoriteExercise != null)
+        if (SelectedFavoriteExercise != null)
         {
-            AddedFavoriteExercise = SelectedFavoriteExercise.ExerciseName;
-
-            FavoriteExercises.Add(new FavoriteExercise
+            var updatedFavoriteExercise = FavoriteExercises.FirstOrDefault(fe => fe.ExerciseName == SelectedFavoriteExercise.ExerciseName);
+            if (updatedFavoriteExercise == null)
             {
-                ExerciseName = AddedFavoriteExercise,
-                TargetWeight = TargetWeight
-            });
+                FavoriteExercises.Add(new FavoriteExercise
+                {
+                    ExerciseName = SelectedFavoriteExercise.ExerciseName,
+                    TargetWeight = TargetWeight
+                });
+            }
+            else
+            {
+                FavoriteExercises.Remove(updatedFavoriteExercise);
+                FavoriteExercises.Add(new FavoriteExercise
+                {
+                    ExerciseName = updatedFavoriteExercise.ExerciseName,
+                    TargetWeight = TargetWeight
+                });
+            }
         }
 
         TargetWeight = 0;
