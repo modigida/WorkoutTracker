@@ -62,7 +62,8 @@
                             <ContentPresenter x:Name="MyContentPresenter" 
                                       Content="{TemplateBinding Content}"
                                       HorizontalAlignment="Center" 
-                                      VerticalAlignment="Center" />
+                                      VerticalAlignment="Center"
+                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -71,6 +72,7 @@
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Foreground" Value="#272427" />
                     <Setter Property="Background" Value="#272427" />
+                    <Setter Property="FontStyle" Value="Italic" />
                     <Setter Property="Opacity" Value="1" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
@@ -98,7 +100,8 @@
                             <ContentPresenter x:Name="MyContentPresenter" 
                           Content="{TemplateBinding Content}"
                           HorizontalAlignment="Center" 
-                          VerticalAlignment="Center" />
+                          VerticalAlignment="Center"
+                          TextElement.Foreground="{TemplateBinding Foreground}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -107,6 +110,8 @@
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Foreground" Value="#272427" />
                     <Setter Property="Background" Value="#272427" />
+                    <Setter Property="FontStyle" Value="Italic" />
+                    <Setter Property="Opacity" Value="1" />
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Cursor" Value="Hand" />

@@ -55,7 +55,7 @@
         </Button>
 
         <TextBlock Text="Description" FontSize="18" Grid.Row="2"/>
-        <TextBox Text="{Binding ExerciseDetailsVM.Exercise.Description}" FontSize="14" TextWrapping="Wrap" Grid.Row="3" VerticalContentAlignment="Top" BorderBrush="#fffff0" Background="#80414141"/>
+        <TextBox Text="{Binding ExerciseDetailsVM.Exercise.Description}" FontSize="14" TextWrapping="Wrap" Grid.Row="3" VerticalContentAlignment="Top" BorderBrush="#fffff0" Background="{StaticResource GlobalComponentColor}"/>
 
             <TextBlock Text="Muscle Groups" HorizontalAlignment="Left" FontSize="18" Grid.Row="4"/>
             <ListView

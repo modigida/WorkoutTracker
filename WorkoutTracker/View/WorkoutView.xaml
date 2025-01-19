@@ -109,7 +109,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid Grid.Row="3" Background="#80414141" >
+        <Grid Grid.Row="3" Background="{StaticResource GlobalComponentColor}" >
             <Border BorderBrush="#fffff0" BorderThickness="1" Margin="5,0,5,5" />
             <Grid>
                 <Grid.RowDefinitions>
@@ -120,8 +120,8 @@
             <TextBlock Text="Workout summary" Grid.Row="0" HorizontalAlignment="Center" Margin="10" FontSize="18" />
 
                 <Grid Grid.Row="1" Margin="10" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
