@@ -49,18 +49,30 @@
         </Style>
 
         <Style TargetType="Button" x:Key="MenuButtonStyling" BasedOn="{StaticResource StandardButtonStyling}" >
+            <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Background" Value="#272427"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="Height" Value="25" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid Background="{TemplateBinding Background}" >
+                            <ContentPresenter x:Name="MyContentPresenter" 
+                                      Content="{TemplateBinding Content}"
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Foreground" Value="#272427" />
                     <Setter Property="Background" Value="#272427" />
                     <Setter Property="Opacity" Value="1" />
                 </Trigger>
-
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>
                     <Setter Property="Background" Value="#272427"/>
@@ -73,15 +85,31 @@
         </Style>
         
         <Style TargetType="ToggleButton">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Background" Value="#272427"/>
             <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource GlobalForegroundColor}" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="Height" Value="25" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Grid Background="{TemplateBinding Background}" >
+                            <ContentPresenter x:Name="MyContentPresenter" 
+                          Content="{TemplateBinding Content}"
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Foreground" Value="#272427" />
                     <Setter Property="Background" Value="#272427" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Foreground" Value="{StaticResource GlobalForegroundColor}"/>

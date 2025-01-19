@@ -35,9 +35,9 @@
                 <ToggleButton IsEnabled="{Binding IsMenuEnabled}" Background="#272427" x:Name="OptionsButton" HorizontalContentAlignment="Left" BorderThickness="0" Content="{Binding CurrentUserStatus}" Command="{Binding OpenOptionsMenuCommand}" />
                 <Popup Placement="Bottom" PlacementTarget="{Binding ElementName=OptionsButton}" IsOpen="{Binding IsOptionsMenuOpen}">
                     <StackPanel Background="#80414141">
-                        <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalContentAlignment="Stretch"/>
-                        <Button Content="Add New User" Command="{Binding AddNewUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalContentAlignment="Left"/>
-                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsOnline}" HorizontalContentAlignment="Left"/>
+                        <Button Content="Change User" Command="{Binding UserVM.ChangeUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalAlignment="Left" Margin="5,0"/>
+                        <Button Content="Add New User" Command="{Binding AddNewUserCommand}" Style="{StaticResource MenuButtonStyling}" HorizontalAlignment="Left" Margin="5,0"/>
+                        <Button Content="Logout" Command="{Binding UserVM.LogoutCommand}" Style="{StaticResource MenuButtonStyling}" IsEnabled="{Binding IsOnline}" HorizontalAlignment="Left" Margin="5,0"/>
                     </StackPanel>
                 </Popup>
             </StackPanel>
@@ -48,7 +48,7 @@
 
         <Image Source="pack://application:,,,/WorkoutTracker;component/Resources/Background.jpg" Stretch="Fill" Grid.Row="1" />
 
-        <view:StartView Grid.Row="1" Visibility="{Binding IsStartVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <view:StartView Grid.Row="1" Visibility="{Binding IsStartVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
         <view:ExerciseDetailsView Grid.Row="1" Visibility="{Binding IsExerciseDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:ExerciseListView Grid.Row="1" Visibility="{Binding IsExerciseListVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <view:StatisticsView Grid.Row="1" Visibility="{Binding IsStatisticsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
