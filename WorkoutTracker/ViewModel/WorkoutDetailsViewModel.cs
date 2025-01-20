@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Forms;
-using System.Windows.Markup;
 using WorkoutTracker.Model;
 using WorkoutTracker.Repository;
 
@@ -76,14 +74,16 @@ public class WorkoutDetailsViewModel : BaseViewModel
             return;
         }
 
-        var groupedExercises = Workout.Exercises
-            .GroupBy(ex => ex.ExerciseName)
-            .Select(group => new WorkoutExercise
-            {
-                ExerciseName = group.Key,
-                Sets = group.SelectMany(ex => ex.Sets).ToList()
-            });
+        Exercises = new ObservableCollection<WorkoutExercise>(Workout.Exercises);
 
-        Exercises = new ObservableCollection<WorkoutExercise>(groupedExercises);
+        //var groupedExercises = Workout.Exercises
+        //    .GroupBy(ex => ex.ExerciseName)
+        //    .Select(group => new WorkoutExercise
+        //    {
+        //        ExerciseName = group.Key,
+        //        Sets = group.SelectMany(ex => ex.Sets).ToList()
+        //    });
+        //
+        //Exercises = new ObservableCollection<WorkoutExercise>(groupedExercises);
     }
 }

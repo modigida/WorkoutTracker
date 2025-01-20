@@ -81,6 +81,7 @@ public class WorkoutViewModel : BaseViewModel
         get => _personalRecords;
         set => SetProperty(ref _personalRecords, value);
     }
+    public ICommand DeleteSetCommand { get; }
     public ICommand SaveWorkoutExerciseCommand { get; }
     public ICommand FinishWorkoutCommand { get; }
     public WorkoutViewModel(MainWindowViewModel mainWindowViewModel, WorkoutRepository workoutRepository, 
@@ -92,9 +93,16 @@ public class WorkoutViewModel : BaseViewModel
         _userViewModel = userViewModel;
         _personalRecordRepository = personalRecordRepository;
 
+        DeleteSetCommand = new RelayCommand(DeleteSet);
         SaveWorkoutExerciseCommand = new RelayCommand(SaveWorkoutExercise);
         FinishWorkoutCommand = new RelayCommand(FinishWorkout);
     }
+
+    private void DeleteSet(object obj)
+    {
+        //throw new NotImplementedException();
+    }
+
     public async Task StartNewWorkout(string userId)
     {
         _mainWindowViewModel.IsAvailable = false;
@@ -156,10 +164,21 @@ public class WorkoutViewModel : BaseViewModel
     }
     private void CreateWorkoutExercise()
     {
-        WorkoutExercises.Add(new WorkoutExercise
+        var existingExercise = WorkoutExercises.FirstOrDefault(we => we.ExerciseName == SelectedExercise.ExerciseName);
+        if (existingExercise != null)
         {
-            ExerciseName = SelectedExercise.ExerciseName,
-            Sets = new List<Set>
+            existingExercise.Sets.Add(new Set
+            {
+                Weight = Weight,
+                Reps = Reps
+            });
+        }
+        else
+        {
+            WorkoutExercises.Add(new WorkoutExercise
+            {
+                ExerciseName = SelectedExercise.ExerciseName,
+                Sets = new List<Set>
             {
                 new Set
                 {
@@ -167,7 +186,8 @@ public class WorkoutViewModel : BaseViewModel
                     Reps = Reps
                 }
             }
-        });
+            });
+        }
     }
     private async void ManagePersonalRecord()
     {

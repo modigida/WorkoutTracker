@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkoutTracker.View" 
              xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -58,11 +60,76 @@
                     <TextBlock Text="reps" />
                 </StackPanel>
 
-                <Button Content="Save set" Command="{Binding WorkoutVM.SaveWorkoutExerciseCommand}" Style="{StaticResource StandardButtonStyling}" Grid.Column="3" Width="120" />
+                <Button Content="Save set" 
+                        Command="{Binding WorkoutVM.SaveWorkoutExerciseCommand}" 
+                        Style="{StaticResource StandardButtonStyling}" Grid.Column="3" Width="120" />
 
             </Grid>
         </StackPanel>
 
+        <Grid Grid.Row="2" Margin="5,0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Exercises" FontSize="24"/>
+            <TextBlock Text="Sets" FontSize="24" Grid.Column="1" Margin="5,0,0,0"/>
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <ListView
+                DataContext="{Binding WorkoutVM}"
+                ItemsSource="{Binding WorkoutExercises}"
+                SelectedItem="{Binding SelectedWorkoutExercise}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ExerciseName}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ListView 
+                DataContext="{Binding WorkoutVM.SelectedWorkoutExercise}"
+                ItemsSource="{Binding Sets}" Grid.Column="1" Margin="5,0,0,0" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="30" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Weight}" />
+                                <TextBlock Text="kg" Margin="5,0,20,0" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <TextBlock Text="{Binding Reps}" />
+                                <TextBlock Text="reps" Margin="5,0,20,0" />
+                            </StackPanel>
+
+                            <Button Command="{Binding DeleteSetCommand}" Grid.Column="2" FontSize="14" BorderThickness="0"
+                                    Foreground="{StaticResource GlobalForegroundColor}" CommandParameter="{Binding}"
+                                    Background="{StaticResource GlobalComponentColor}">
+                                <Button.Content>
+                                    <fa:IconBlock Icon="TrashCan" />
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+
+
+        <!--
         <ListView 
             DataContext="{Binding WorkoutVM}"
             ItemsSource="{Binding WorkoutExercises}"
@@ -73,8 +140,9 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="220"/>
                             <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="40"/>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Text="{Binding ExerciseName}"
@@ -107,12 +175,20 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
+                        <Button Command="{Binding DeleteSetCommand}" Grid.Column="2" FontSize="14" BorderThickness="0"
+                                Foreground="{StaticResource GlobalForegroundColor}" CommandParameter="{Binding}"
+                                Background="{StaticResource GlobalComponentColor}">
+                            <Button.Content>
+                                <fa:IconBlock Icon="TrashCan" />
+                            </Button.Content>
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-        <Grid Grid.Row="3" Background="{StaticResource GlobalComponentColor}" >
+-->
+        <Grid Grid.Row="4" Background="{StaticResource GlobalComponentColor}" >
             <Border BorderBrush="#fffff0" BorderThickness="1" Margin="5,0,5,5" />
             <Grid>
                 <Grid.RowDefinitions>

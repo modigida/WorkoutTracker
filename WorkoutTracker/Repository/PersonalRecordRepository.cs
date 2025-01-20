@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Xml.Linq;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;
 
@@ -32,18 +31,18 @@ public class PersonalRecordRepository
     {
         var pipeline = new[]
         {
-        new BsonDocument("$match", new BsonDocument("UserId", userId)), // Filtrera på användarens ID
+        new BsonDocument("$match", new BsonDocument("UserId", userId)), 
         new BsonDocument("$group", new BsonDocument
         {
-            { "_id", "$ExerciseName" }, // Gruppera efter övningens namn
-            { "MaxWeight", new BsonDocument("$max", "$MaxWeight") }, // Hämta maxvikten
-            { "DateAchieved", new BsonDocument("$first", "$DateAchieved") }, // Behåll ett representativt datum
-            { "UserId", new BsonDocument("$first", "$UserId") }, // Behåll UserId för spårbarhet
+            { "_id", "$ExerciseName" }, 
+            { "MaxWeight", new BsonDocument("$max", "$MaxWeight") },
+            { "DateAchieved", new BsonDocument("$first", "$DateAchieved") },
+            { "UserId", new BsonDocument("$first", "$UserId") }, 
         }),
         new BsonDocument("$project", new BsonDocument
         {
-            { "_id", 0 }, // Dölj det automatiska "_id"-fältet
-            { "ExerciseName", "$_id" }, // Mappa tillbaka gruppens ID till "ExerciseName"
+            { "_id", 0 }, 
+            { "ExerciseName", "$_id" }, 
             { "MaxWeight", 1 },
             { "DateAchieved", 1 },
             { "UserId", 1 },
