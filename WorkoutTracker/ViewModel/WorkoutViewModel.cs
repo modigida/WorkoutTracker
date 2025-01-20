@@ -195,6 +195,8 @@ public class WorkoutViewModel : BaseViewModel
     {
         if (SelectedSet != null)
         {
+            var weight = SelectedSet.Weight;
+            CheckIfPersonalRecord(weight);
             SelectedSet.Weight = Weight;
             SelectedSet.Reps = Reps;
             SelectedSet = null;
@@ -292,20 +294,20 @@ public class WorkoutViewModel : BaseViewModel
             }
         }
 
-        CheckIfPersonalRecord();
+        CheckIfPersonalRecord(deleteSet.Weight);
 
         CountTotalWeight();
         CountTotalSets();
         CountTotalReps();
     }
-    private async void CheckIfPersonalRecord()
+    private async void CheckIfPersonalRecord(double weight)
     {
         var personalRecords = await _personalRecordRepository.GetByExerciseAsync(SelectedWorkoutExercise.ExerciseName, _userViewModel.User.Id);
 
         foreach (var pr in personalRecords)
         {
             if (pr.DateAchieved.Date == DateTime.Now.Date &&
-                !SelectedWorkoutExercise.Sets.Any(set => set.Weight == pr.MaxWeight))
+                weight == pr.MaxWeight)
             {
                 await _personalRecordRepository.DeleteAsync(pr.Id);
             }
@@ -370,7 +372,10 @@ public class WorkoutViewModel : BaseViewModel
 
         await _workoutRepository.CreateAsync(Workout);
 
-        Sets.Clear();
+        if (Sets != null)
+        {
+            Sets.Clear();
+        }
 
         _mainWindowViewModel.IsAvailable = true;
         _mainWindowViewModel.IsMenuEnabled = true;
