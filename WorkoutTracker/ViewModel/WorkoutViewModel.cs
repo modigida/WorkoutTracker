@@ -14,11 +14,26 @@ public class WorkoutViewModel : BaseViewModel
     private readonly UserViewModel _userViewModel;
     private readonly PersonalRecordRepository _personalRecordRepository;
 
+    private double _newWeight;
+
     private Exercise _selectedExercise;
     public Exercise SelectedExercise
     {
         get => _selectedExercise;
-        set => SetProperty(ref _selectedExercise, value);
+        set
+        {
+            SetProperty(ref _selectedExercise, value);
+            if (SelectedExercise != null && SelectedWorkoutExercise != null)
+            {
+                if (SelectedExercise.ExerciseName != SelectedWorkoutExercise.ExerciseName)
+                {
+                    Sets = new ObservableCollection<Set>();
+                    Weight = 0;
+                    Reps = 0;
+                    SelectedSet = null;
+                }
+            }
+        }
     }
     private WorkoutExercise _selectedWorkoutExercise;
     public WorkoutExercise SelectedWorkoutExercise
@@ -28,6 +43,19 @@ public class WorkoutViewModel : BaseViewModel
         {
             SetProperty(ref _selectedWorkoutExercise, value);
             if (SelectedWorkoutExercise != null)
+            {
+                PrintExerciseToEdit();
+            }
+        }
+    }
+    private Set _selectedSet;
+    public Set SelectedSet
+    {
+        get => _selectedSet;
+        set
+        {
+            SetProperty(ref _selectedSet, value);
+            if (SelectedSet != null)
             {
                 PrintSetToEdit();
             }
@@ -50,6 +78,12 @@ public class WorkoutViewModel : BaseViewModel
     {
         get => _workoutExercises;
         set => SetProperty(ref _workoutExercises, value);
+    }
+    private ObservableCollection<Set> _sets;
+    public ObservableCollection<Set> Sets
+    {
+        get => _sets;
+        set => SetProperty(ref _sets, value);
     }
     private Workout _workout;
     public Workout Workout
@@ -93,15 +127,12 @@ public class WorkoutViewModel : BaseViewModel
         _userViewModel = userViewModel;
         _personalRecordRepository = personalRecordRepository;
 
-        DeleteSetCommand = new RelayCommand(DeleteSet);
+        DeleteSetCommand = new RelayCommand<Set>(async set => await DeleteSet(set));
         SaveWorkoutExerciseCommand = new RelayCommand(SaveWorkoutExercise);
         FinishWorkoutCommand = new RelayCommand(FinishWorkout);
     }
 
-    private void DeleteSet(object obj)
-    {
-        //throw new NotImplementedException();
-    }
+   
 
     public async Task StartNewWorkout(string userId)
     {
@@ -127,40 +158,67 @@ public class WorkoutViewModel : BaseViewModel
     }
     private void SaveWorkoutExercise(object obj)
     {
-        if (SelectedWorkoutExercise != null && SelectedWorkoutExercise.ExerciseName == SelectedExercise.ExerciseName)
+        _newWeight = Weight;
+        if (!EditSet())
         {
-            var existingExercise = WorkoutExercises.FirstOrDefault(we => we.ExerciseName == SelectedWorkoutExercise.ExerciseName);
-            if (existingExercise != null)
+            if (SelectedWorkoutExercise != null && SelectedWorkoutExercise.ExerciseName == SelectedExercise.ExerciseName)
             {
-                var existingSet = existingExercise.Sets.FirstOrDefault(set => set.Weight == SelectedWorkoutExercise.Sets.FirstOrDefault().Weight 
-                && set.Reps == SelectedWorkoutExercise.Sets.FirstOrDefault().Reps);
-
-                if (existingSet != null)
+                var existingExercise = WorkoutExercises.FirstOrDefault(we => we.ExerciseName == SelectedWorkoutExercise.ExerciseName);
+                if (existingExercise != null)
                 {
-                    WorkoutExercises.Remove(existingExercise);
-                    existingSet.Weight = Weight;
-                    existingSet.Reps = Reps;
-                    WorkoutExercises.Add(existingExercise);
+                    EditSet();
+                    existingExercise.Sets.Add(new Set { Weight = Weight, Reps = Reps });
                 }
                 else
                 {
                     CreateWorkoutExercise();
                 }
             }
-        }
-        else
-        {
-            CreateWorkoutExercise();
+            else
+            {
+                CreateWorkoutExercise();
+            }
         }
 
+        SelectedWorkoutExercise = WorkoutExercises.FirstOrDefault(name => name.ExerciseName == SelectedExercise.ExerciseName);
+
+        ManageSets();
         ManagePersonalRecord();
         CountTotalWeight();
         CountTotalSets();
         CountTotalReps();
 
-        SelectedExercise = null;
         Weight = 0;
         Reps = 0;
+    }
+    private bool EditSet()
+    {
+        if (SelectedSet != null)
+        {
+            SelectedSet.Weight = Weight;
+            SelectedSet.Reps = Reps;
+            SelectedSet = null;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private void ManageSets()
+    {
+        if (Sets == null)
+        {
+            Sets = new ObservableCollection<Set>(SelectedWorkoutExercise.Sets);
+        }
+        else
+        {
+            Sets.Clear();
+            foreach (var set in SelectedWorkoutExercise.Sets)
+            {
+                Sets.Add(set);
+            }
+        }
     }
     private void CreateWorkoutExercise()
     {
@@ -191,29 +249,66 @@ public class WorkoutViewModel : BaseViewModel
     }
     private async void ManagePersonalRecord()
     {
-        if (!PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName) ||
-            PersonalRecords.Any(pr => pr.ExerciseName == SelectedExercise.ExerciseName && pr.MaxWeight < Weight))
+        var existingRecord = PersonalRecords
+            .FirstOrDefault(pr => pr.ExerciseName.Equals(SelectedExercise.ExerciseName, StringComparison.OrdinalIgnoreCase));
+
+        if (existingRecord == null || existingRecord.MaxWeight < _newWeight) 
         {
             var personalRecord = new PersonalRecord
             {
                 UserId = _userViewModel.User.Id,
                 ExerciseName = SelectedExercise.ExerciseName,
-                MaxWeight = Weight,
+                MaxWeight = _newWeight,
                 DateAchieved = DateTime.Now
             };
             await SavePersonalRecord(personalRecord);
         }
     }
-
-    private void PrintSetToEdit()
+    private void PrintExerciseToEdit()
     {
         SelectedExercise = _exerciseListViewModel.Exercises.FirstOrDefault(e => e.ExerciseName == SelectedWorkoutExercise.ExerciseName);
 
-        var firstSet = SelectedWorkoutExercise.Sets.FirstOrDefault();
-        if (firstSet != null)
+        Sets = new ObservableCollection<Set>(SelectedWorkoutExercise.Sets);
+        Weight = 0;
+        Reps = 0;
+    }
+    private void PrintSetToEdit()
+    {
+        Weight = SelectedSet.Weight;
+        Reps = SelectedSet.Reps;
+    }
+    private async Task DeleteSet(Set deleteSet)
+    {
+        if (deleteSet != null)
         {
-            Weight = firstSet.Weight;
-            Reps = firstSet.Reps;
+            Sets.Remove(deleteSet);
+
+            foreach (var set in WorkoutExercises)
+            {
+                if (set.Sets.Contains(deleteSet))
+                {
+                    set.Sets.Remove(deleteSet);
+                }
+            }
+        }
+
+        CheckIfPersonalRecord();
+
+        CountTotalWeight();
+        CountTotalSets();
+        CountTotalReps();
+    }
+    private async void CheckIfPersonalRecord()
+    {
+        var personalRecords = await _personalRecordRepository.GetByExerciseAsync(SelectedWorkoutExercise.ExerciseName, _userViewModel.User.Id);
+
+        foreach (var pr in personalRecords)
+        {
+            if (pr.DateAchieved.Date == DateTime.Now.Date &&
+                !SelectedWorkoutExercise.Sets.Any(set => set.Weight == pr.MaxWeight))
+            {
+                await _personalRecordRepository.DeleteAsync(pr.Id);
+            }
         }
     }
     private void CountTotalWeight()
@@ -274,6 +369,8 @@ public class WorkoutViewModel : BaseViewModel
         Workout.EndTime = DateTime.Now;
 
         await _workoutRepository.CreateAsync(Workout);
+
+        Sets.Clear();
 
         _mainWindowViewModel.IsAvailable = true;
         _mainWindowViewModel.IsMenuEnabled = true;

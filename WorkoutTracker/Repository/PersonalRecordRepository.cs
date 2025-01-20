@@ -15,9 +15,9 @@ public class PersonalRecordRepository
     {
         return await _personalRecords.Find(pr => pr.UserId == userId).ToListAsync();
     }
-    public async Task<PersonalRecord> GetByExerciseAsync(string exercise, string userId)
+    public async Task<List<PersonalRecord>> GetByExerciseAsync(string exercise, string userId)
     {
-        return await _personalRecords.Find(pr => pr.ExerciseName == exercise && pr.UserId == userId).FirstOrDefaultAsync();
+        return await _personalRecords.Find(pr => pr.ExerciseName == exercise && pr.UserId == userId).ToListAsync();
     }
     public async Task CreateAsync(PersonalRecord personalRecord)
     {

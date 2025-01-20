@@ -38,12 +38,10 @@ public class WorkoutDetailsViewModel : BaseViewModel
             }
         }
     }
-
     private async void UpdateWorkout()
     {
         await _workoutRepository.UpdateAsync(Workout.Id, Workout);
     }
-
     private TimeSpan _workoutLength;
     public TimeSpan WorkoutLength
     {
