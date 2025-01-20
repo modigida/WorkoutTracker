@@ -5,10 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkoutTracker.View" 
              xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             xmlns:behaviors="clr-namespace:WorkoutTracker.Behaviors" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:WorkoutTracker.Converters"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <converters:StringToDoubleConverter x:Key="StringToDoubleConverter" />
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -49,13 +56,19 @@
                 </ComboBox>
                 
                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" >
-                    <TextBox Text="{Binding WorkoutVM.Weight}" Width="30" HorizontalContentAlignment="Right" >
+                    <TextBox Text="{Binding WorkoutVM.Weight, Mode=TwoWay, Converter={StaticResource StringToDoubleConverter}, UpdateSourceTrigger=LostFocus}" Width="30" HorizontalContentAlignment="Right" >
+                        <i:Interaction.Behaviors>
+                            <behaviors:NumericInputBehavior />
+                        </i:Interaction.Behaviors>
                     </TextBox>
                     <TextBlock Text="kg" />
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" >
-                    <TextBox Text="{Binding WorkoutVM.Reps}" Width="30" HorizontalContentAlignment="Right" >
+                    <TextBox Text="{Binding WorkoutVM.Reps, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Width="30" HorizontalContentAlignment="Right" >
+                        <i:Interaction.Behaviors>
+                            <behaviors:IntegerInputBehavior />
+                        </i:Interaction.Behaviors>
                     </TextBox>
                     <TextBlock Text="reps" />
                 </StackPanel>

@@ -5,10 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WorkoutTracker.View" 
              xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             xmlns:behaviors="clr-namespace:WorkoutTracker.Behaviors" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:WorkoutTracker.Converters"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
+
+    <UserControl.Resources>
+        <converters:StringToDoubleConverter x:Key="StringToDoubleConverter" />
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -89,8 +96,12 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <TextBox Text="{Binding UserVM.TargetWeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                    Grid.Column="1" HorizontalContentAlignment="Center" />
+            <TextBox Text="{Binding UserVM.TargetWeight, Mode=TwoWay, Converter={StaticResource StringToDoubleConverter}, UpdateSourceTrigger=LostFocus}" 
+                    Grid.Column="1" HorizontalContentAlignment="Center" >
+                <i:Interaction.Behaviors>
+                    <behaviors:NumericInputBehavior />
+                </i:Interaction.Behaviors>
+            </TextBox>
 
             <Button Content="Add" Command="{Binding UserVM.AddFavoriteExerciseCommand}" Style="{StaticResource StandardButtonStyling}" Grid.Column="2" />
             </Grid>

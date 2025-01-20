@@ -131,9 +131,6 @@ public class WorkoutViewModel : BaseViewModel
         SaveWorkoutExerciseCommand = new RelayCommand(SaveWorkoutExercise);
         FinishWorkoutCommand = new RelayCommand(FinishWorkout);
     }
-
-   
-
     public async Task StartNewWorkout(string userId)
     {
         _mainWindowViewModel.IsAvailable = false;
