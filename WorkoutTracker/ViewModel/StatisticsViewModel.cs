@@ -30,6 +30,18 @@ public class StatisticsViewModel : BaseViewModel
         get => _user;
         set => SetProperty(ref _user, value);
     }
+    private string _totalWeightLifted;
+    public string TotalWeightLifted
+    {
+        get => _totalWeightLifted;
+        set => SetProperty(ref _totalWeightLifted, value);
+    }
+    private string _averageWeightPerRep;
+    public string AverageWeightPerRep
+    {
+        get => _averageWeightPerRep;
+        set => SetProperty(ref _averageWeightPerRep, value);
+    }
     private string _selectedTimeFram;
     public string SelectedTimeFrame
     {
@@ -52,6 +64,7 @@ public class StatisticsViewModel : BaseViewModel
             SetProperty(ref _selectedExercise, value);
             if (UserPersonalRecords != null && SelectedExercise != null)
             {
+                GetTotalWeightLifted();
                 LoadPercentOfGoal();
             }
         }
@@ -88,11 +101,11 @@ public class StatisticsViewModel : BaseViewModel
         SelectedTimeFrame = "Since start";
         await GetPersonalRecords();
         await GetWorkoutData();
+        GetTotalWeightLifted();
     }
     private async Task GetWorkoutData()
     {
         UserWorkouts = await _workoutRepository.GetAllByUserIdAsync(User.Id);
-
         FilterWorkouts();
     }
     private void FilterWorkouts()
@@ -182,6 +195,40 @@ public class StatisticsViewModel : BaseViewModel
             colorIndex++;
         }
     }
+    private void GetTotalWeightLifted()
+    {
+        TotalWeightLifted = string.Empty;
+        var totalWeight = 0.0;
+        var amountOfReps = 0.0;
+
+        foreach (var workout in UserWorkouts)
+        {
+            foreach (var exercise in workout.Exercises)
+            {
+                if (exercise.ExerciseName == SelectedExercise.ExerciseName)
+                {
+                    foreach (var set in exercise.Sets)
+                    {
+                        totalWeight += set.Weight * set.Reps;
+                        amountOfReps += set.Reps;
+                    }
+                }
+            }
+        }
+
+        var average = totalWeight / amountOfReps;
+        string formattedAverage = FormatDouble(average);
+
+        AverageWeightPerRep = amountOfReps > 0
+            ? $"In average you lift {formattedAverage} kg per rep"
+            : "No reps available to calculate average";
+
+        string formattedWeight = FormatDouble(totalWeight);
+
+        TotalWeightLifted = amountOfReps > 0
+            ? $"Your total weight for {SelectedExercise.ExerciseName.ToLower()} is {formattedWeight} kg"
+            : $"No data available for {SelectedExercise.ExerciseName.ToLower()}";
+    }
     private void LoadPercentOfGoal()
     {
         double goal = SelectedExercise.TargetWeight;
@@ -206,11 +253,7 @@ public class StatisticsViewModel : BaseViewModel
         {
             double weightLeft = goal - record;
 
-            string formattedWeight = weightLeft == Math.Floor(weightLeft)
-                ? $"{weightLeft:F0}"
-                : weightLeft == Math.Round(weightLeft, 1)
-                    ? $"{weightLeft:F1}"
-                    : $"{weightLeft:F2}";
+            string formattedWeight = FormatDouble(weightLeft);
 
             double achievedPercentage = (record / goal) * 100;
             double remainingPercentage = 100 - achievedPercentage;
@@ -237,5 +280,13 @@ public class StatisticsViewModel : BaseViewModel
                 }
             };
         }
+    }
+    public string FormatDouble(double number)
+    {
+        return number == Math.Floor(number)
+            ? $"{number:F0}"
+            : number == Math.Round(number, 1)
+                ? $"{number:F1}"
+                : $"{number:F2}";
     }
 }

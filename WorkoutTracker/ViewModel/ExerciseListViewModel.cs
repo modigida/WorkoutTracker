@@ -32,8 +32,6 @@ public class ExerciseListViewModel : BaseViewModel
     {
         _mainWindowViewModel = mainWindowViewModel;
         _exerciseRepository = exerciseRepository;
-
-        //GetExercises();
     }
     public async Task GetExerciseNames()
     {
