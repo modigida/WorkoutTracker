@@ -148,12 +148,14 @@ public class StatisticsViewModel : BaseViewModel
         var colors = new List<SolidColorBrush>
         {
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#76448A")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45B39D"))
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45B39D")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5F6A6A"))
         };
 
         int colorIndex = 0;
@@ -226,14 +228,14 @@ public class StatisticsViewModel : BaseViewModel
         string formattedAverage = FormatDouble(average);
 
         AverageWeightPerRep = amountOfReps > 0
-            ? $"In average you lift {formattedAverage} kg per rep"
-            : "No reps available to calculate average";
+            ? $"in average you {SelectedExercise.ExerciseName.ToLower()} {formattedAverage} kg per rep"
+            : "no reps available to calculate average";
 
         string formattedWeight = FormatDouble(totalWeight);
 
         TotalWeightLifted = amountOfReps > 0
-            ? $"Your total weight for {SelectedExercise.ExerciseName.ToLower()} is {formattedWeight} kg"
-            : $"No data available for {SelectedExercise.ExerciseName.ToLower()}";
+            ? $"your total weight lifted for {SelectedExercise.ExerciseName.ToLower()} is {formattedWeight} kg"
+            : $"no data available for {SelectedExercise.ExerciseName.ToLower()}";
     }
     private void LoadPercentOfGoal()
     {
@@ -247,7 +249,7 @@ public class StatisticsViewModel : BaseViewModel
             {
                 new PieSeries
                 {
-                    Title = $"Goal Reached ({SelectedExercise.TargetWeight} kg)",
+                    Title = $"Goal ({SelectedExercise.TargetWeight} kg) Reached",
                     Values = new ChartValues<double> { 100 },
                     Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
                     Stroke = diagramBorder,
@@ -255,13 +257,14 @@ public class StatisticsViewModel : BaseViewModel
                     PushOut = 0
                 }
             };
-            PercentOfGoalString = $"You have reached your goal for {SelectedExercise.ExerciseName.ToLower()}";
+            PercentOfGoalString = $"you have reached your goal for {SelectedExercise.ExerciseName.ToLower()}";
         }
         else
         {
             double weightLeft = goal - record;
 
             string formattedWeight = FormatDouble(weightLeft);
+            string formattedeRecord = FormatDouble(record);
 
             double achievedPercentage = (record / goal) * 100;
             double remainingPercentage = 100 - achievedPercentage;
@@ -270,7 +273,7 @@ public class StatisticsViewModel : BaseViewModel
             {
                 new PieSeries
                 {
-                    Title = $"Personal Record ({SelectedExercise.TargetWeight} kg)",
+                    Title = $"Personal Record ({formattedeRecord} kg)",
                     Values = new ChartValues<double> { achievedPercentage },
                     Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
                     Stroke = diagramBorder,
@@ -279,7 +282,7 @@ public class StatisticsViewModel : BaseViewModel
                 },
                 new PieSeries
                 {
-                    Title = $"{formattedWeight} kg left to reach goal",
+                    Title = $"{formattedWeight} kg left to reach goal ({SelectedExercise.TargetWeight} kg)",
                     Values = new ChartValues<double> { remainingPercentage },
                     Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
                     Stroke = diagramBorder,
@@ -289,7 +292,7 @@ public class StatisticsViewModel : BaseViewModel
             };
 
             var formattedPercentage = FormatDouble(achievedPercentage);
-            PercentOfGoalString = $"You have reached {formattedPercentage} % of your goal for {SelectedExercise.ExerciseName.ToLower()}";
+            PercentOfGoalString = $"you have reached {formattedPercentage} % of your goal for {SelectedExercise.ExerciseName.ToLower()}";
         }
     }
     public string FormatDouble(double number)

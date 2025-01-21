@@ -90,7 +90,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-            <Grid Grid.Row="6" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
+        <Grid Grid.Row="6" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
@@ -98,7 +98,7 @@
             <ComboBox 
                     ItemsSource="{Binding ExerciseDetailsVM.AvailableMuscleGroups}"
                     SelectedItem="{Binding ExerciseDetailsVM.SelectedMuscleGroup}"
-                    FontSize="14" >
+                    FontSize="14" MaxDropDownHeight="110" >
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
@@ -110,7 +110,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             <Button Content="Add" Command="{Binding ExerciseDetailsVM.AddMuscleGroupCommand}" Style="{StaticResource StandardButtonStyling}" Grid.Column="1" Margin="5,0,0,0"/>
-            </Grid>
+        </Grid>
 
         <Button Content="Save" Command="{Binding ExerciseDetailsVM.SaveExerciseCommand}" Style="{StaticResource StandardButtonStyling}" Width="200" FontSize="18" BorderThickness="1.5" Padding="10" HorizontalAlignment="Center" Grid.Row="7" Margin="5" />
 
