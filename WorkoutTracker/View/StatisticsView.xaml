@@ -57,6 +57,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <ComboBox 
                     ItemsSource="{Binding StatisticsVM.FavoriteExercises}"
@@ -77,6 +78,7 @@
                 <TextBlock Text="{Binding StatisticsVM.AverageWeightPerRep}" FontSize="14" Grid.Row="2" />
 
                 <lvc:PieChart Series="{Binding StatisticsVM.PercentOfGoalDiagram}" LegendLocation="Bottom" Grid.Row="3" Height="150" DataTooltip="{x:Null}" />
+                <TextBlock Text="{Binding StatisticsVM.PercentOfGoalString}" FontSize="14" Grid.Row="4" />
             </Grid>
         </Border>
 

@@ -42,6 +42,12 @@ public class StatisticsViewModel : BaseViewModel
         get => _averageWeightPerRep;
         set => SetProperty(ref _averageWeightPerRep, value);
     }
+    private string _percentOfGoalString;
+    public string PercentOfGoalString
+    {
+        get => _percentOfGoalString;
+        set => SetProperty(ref _percentOfGoalString, value);
+    }
     private string _selectedTimeFram;
     public string SelectedTimeFrame
     {
@@ -231,6 +237,7 @@ public class StatisticsViewModel : BaseViewModel
     }
     private void LoadPercentOfGoal()
     {
+        PercentOfGoalString = string.Empty;
         double goal = SelectedExercise.TargetWeight;
         double record = UserPersonalRecords.FirstOrDefault(pr => pr.ExerciseName == SelectedExercise.ExerciseName)?.MaxWeight ?? 0;
 
@@ -242,12 +249,13 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"Goal Reached ({SelectedExercise.TargetWeight} kg)",
                     Values = new ChartValues<double> { 100 },
-                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
                 }
             };
+            PercentOfGoalString = $"You have reached your goal for {SelectedExercise.ExerciseName.ToLower()}";
         }
         else
         {
@@ -264,7 +272,7 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"Personal Record ({SelectedExercise.TargetWeight} kg)",
                     Values = new ChartValues<double> { achievedPercentage },
-                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
@@ -273,12 +281,15 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"{formattedWeight} kg left to reach goal",
                     Values = new ChartValues<double> { remainingPercentage },
-                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
                 }
             };
+
+            var formattedPercentage = FormatDouble(achievedPercentage);
+            PercentOfGoalString = $"You have reached {formattedPercentage} % of your goal for {SelectedExercise.ExerciseName.ToLower()}";
         }
     }
     public string FormatDouble(double number)
