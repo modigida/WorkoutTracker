@@ -1,9 +1,12 @@
 ﻿<UserControl x:Class="WorkoutTracker.View.StatisticsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:WorkoutTracker.View" xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
+             xmlns:local="clr-namespace:WorkoutTracker.View" 
+             xmlns:viewmodel="clr-namespace:WorkoutTracker.ViewModel" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="400">
     <Grid>
@@ -36,7 +39,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Text="Circlediagram displaying most common exercise based on amount of sets or reps" Grid.Row="2" />
+        <lvc:PieChart Series="{Binding StatisticsVM.PercentPerExerciseDiagram}" LegendLocation="Bottom" Grid.Row="2" Height="150" DataTooltip="{x:Null}" />
 
         <ComboBox 
             ItemsSource="{Binding StatisticsVM.FavoriteExercises}"
@@ -55,7 +58,7 @@
         
         <TextBlock Text="Total amount of sets, average total weight and average reps per set" Grid.Row="4" />
 
-        <TextBlock Text="Circlediagram percent of goal reached in pr" Grid.Row="5" />
+        <lvc:PieChart Series="{Binding StatisticsVM.PercentOfGoalDiagram}" LegendLocation="Bottom" Grid.Row="5" Height="150" DataTooltip="{x:Null}" />
 
     </Grid>
 </UserControl>

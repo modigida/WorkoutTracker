@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using LiveCharts.Wpf;
+using LiveCharts;
+using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;
@@ -129,7 +131,7 @@ public class MainWindowViewModel : BaseViewModel
         WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext), this);
         WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM, UserVM, new PersonalRecordRepository(dbContext));
         WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext));
-        StatisticsVM = new StatisticsViewModel(UserVM);
+        StatisticsVM = new StatisticsViewModel(UserVM, new WorkoutRepository(dbContext), new PersonalRecordRepository(dbContext));
 
         OpenExerciseDetailsCommand = new RelayCommand(OpenExerciseDetails);
         OpenExerciseListCommand = new RelayCommand(OpenExerciseList);
@@ -190,9 +192,9 @@ public class MainWindowViewModel : BaseViewModel
         await ExerciseListVM.GetExerciseNames();
         SetViewVisibility(() => IsExerciseListVisible = true);
     }
-    private void OpenStatistics(object obj)
+    private async void OpenStatistics(object obj)
     {
-        StatisticsVM.GetActiveUser();
+        await StatisticsVM.GetActiveUser();
         SetViewVisibility(() => IsStatisticsVisible = true);
     }
     private async void AddNewUser(object obj)
