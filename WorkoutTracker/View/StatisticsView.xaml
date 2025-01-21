@@ -26,7 +26,7 @@
 
         <ComboBox 
             ItemsSource="{Binding StatisticsVM.TimeFrames}"
-            SelectedItem="{Binding StatisticsVM.CurrentTimeFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding StatisticsVM.SelectedTimeFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             Grid.Row="1" HorizontalAlignment="Center" Width="100" Margin="5">
             <ComboBox.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
@@ -39,7 +39,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <lvc:PieChart Series="{Binding StatisticsVM.PercentPerExerciseDiagram}" LegendLocation="Bottom" Grid.Row="2" Height="150" DataTooltip="{x:Null}" />
+        <lvc:PieChart Series="{Binding StatisticsVM.PercentPerExerciseDiagram}" LegendLocation="Right" Grid.Row="2" Height="150" DataTooltip="{x:Null}" />
 
         <ComboBox 
             ItemsSource="{Binding StatisticsVM.FavoriteExercises}"

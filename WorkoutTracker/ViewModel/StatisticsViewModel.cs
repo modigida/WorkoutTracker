@@ -30,11 +30,18 @@ public class StatisticsViewModel : BaseViewModel
         get => _user;
         set => SetProperty(ref _user, value);
     }
-    private string _currentTimeFram;
-    public string CurrentTimeFrame
+    private string _selectedTimeFram;
+    public string SelectedTimeFrame
     {
-        get => _currentTimeFram;
-        set => SetProperty(ref _currentTimeFram, value);
+        get => _selectedTimeFram;
+        set
+        {
+            SetProperty(ref _selectedTimeFram, value);
+            if (SelectedExercise != null && UserWorkouts != null)
+            {
+                FilterWorkouts();
+            }
+        }
     }
     private FavoriteExercise _selectedExercise;
     public FavoriteExercise SelectedExercise
@@ -56,6 +63,7 @@ public class StatisticsViewModel : BaseViewModel
         set => SetProperty(ref _favoriteExercises, value); 
     }
     public List<Workout> UserWorkouts { get; set; }
+    public List<Workout> FilteredWorkouts { get; set; }
     public List<WorkoutExercise> UserWorkoutExercises { get; set; }
     public List<PersonalRecord> UserPersonalRecords { get; set; }
     public ObservableCollection<string> TimeFrames { get; } = new()
@@ -77,13 +85,29 @@ public class StatisticsViewModel : BaseViewModel
         User = _userViewModel.User;
         FavoriteExercises = new ObservableCollection<FavoriteExercise>(User.FavoriteExercises);
         SelectedExercise = FavoriteExercises.FirstOrDefault() ?? new FavoriteExercise();
-        CurrentTimeFrame = "Since start";
+        SelectedTimeFrame = "Since start";
         await GetPersonalRecords();
         await GetWorkoutData();
     }
     private async Task GetWorkoutData()
     {
-        UserWorkouts = new List<Workout>(await _workoutRepository.GetAllByUserIdAsync(User.Id));
+        UserWorkouts = await _workoutRepository.GetAllByUserIdAsync(User.Id);
+
+        FilterWorkouts();
+    }
+    private void FilterWorkouts()
+    {
+        DateTime now = DateTime.Now;
+        FilteredWorkouts = SelectedTimeFrame switch
+        {
+            "Since start" => new List<Workout>(UserWorkouts),
+            "12 months" => new List<Workout>(UserWorkouts.Where(w => w.Date >= now.AddMonths(-12))),
+            "6 months" => new List<Workout>(UserWorkouts.Where(w => w.Date >= now.AddMonths(-6))),
+            "Last month" => new List<Workout>(UserWorkouts.Where(w => w.Date >= now.AddMonths(-1))),
+            "Last week" => new List<Workout>(UserWorkouts.Where(w => w.Date >= now.AddDays(-7))),
+            _ => new List<Workout>(UserWorkouts)
+        };
+
         LoadPercentPerExercise();
     }
     private async Task GetPersonalRecords()
@@ -97,16 +121,20 @@ public class StatisticsViewModel : BaseViewModel
         {
             PercentPerExerciseDiagram = new SeriesCollection();
         }
+        else
+        {
+            PercentPerExerciseDiagram.Clear();
+        }
 
         var colors = new List<SolidColorBrush>
         {
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF3E8E41")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF1976D2")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD32F2F")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFA000")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF7B1FA2")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFC107")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF009688")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45B39D"))
         };
 
         int colorIndex = 0;
@@ -116,7 +144,7 @@ public class StatisticsViewModel : BaseViewModel
         {
             int totalSets = 0;
 
-            foreach (var workout in UserWorkouts)
+            foreach (var workout in FilteredWorkouts)
             {
                 foreach (var workoutExercise in workout.Exercises)
                 {
@@ -143,10 +171,10 @@ public class StatisticsViewModel : BaseViewModel
 
             PercentPerExerciseDiagram.Add(new PieSeries
             {
-                Title = $"{kvp.Key} ({percentage:F1}%)",
+                Title = $"{kvp.Key}, {kvp.Value} sets = {percentage:F1}%",
                 Values = new ChartValues<double> { kvp.Value },
                 Fill = colors[colorIndex % colors.Count],
-                Stroke = Brushes.Black,
+                Stroke = diagramBorder,
                 StrokeThickness = 1,
                 PushOut = 0
             });
@@ -167,7 +195,7 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"Goal Reached ({SelectedExercise.TargetWeight} kg)",
                     Values = new ChartValues<double> { 100 },
-                    Fill = Brushes.Green,
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
@@ -193,7 +221,7 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"Personal Record ({SelectedExercise.TargetWeight} kg)",
                     Values = new ChartValues<double> { achievedPercentage },
-                    Fill = Brushes.Green,
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#A569BD")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
@@ -202,7 +230,7 @@ public class StatisticsViewModel : BaseViewModel
                 {
                     Title = $"{formattedWeight} kg left to reach goal",
                     Values = new ChartValues<double> { remainingPercentage },
-                    Fill = Brushes.Red,
+                    Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
                     Stroke = diagramBorder,
                     StrokeThickness = 2,
                     PushOut = 0
