@@ -11,6 +11,7 @@ public class StatisticsViewModel : BaseViewModel
     private readonly UserViewModel _userViewModel;
     private readonly WorkoutRepository _workoutRepository;
     private readonly PersonalRecordRepository _personalRecordRepository;
+    private readonly ExerciseRepository _exerciseRepository;
     private SolidColorBrush diagramBorder = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#80414141"));
     private SeriesCollection _percentPerExerciseDiagram;
     public SeriesCollection PercentPerExerciseDiagram 
@@ -81,6 +82,7 @@ public class StatisticsViewModel : BaseViewModel
         get => _favoriteExercises;
         set => SetProperty(ref _favoriteExercises, value); 
     }
+    public ObservableCollection<Exercise> Exercises { get; set; }
     public List<Workout> UserWorkouts { get; set; }
     public List<Workout> FilteredWorkouts { get; set; }
     public List<WorkoutExercise> UserWorkoutExercises { get; set; }
@@ -93,16 +95,18 @@ public class StatisticsViewModel : BaseViewModel
         "Last month",
         "Last week"
     };
-    public StatisticsViewModel(UserViewModel userViewModel, WorkoutRepository workoutRepository, PersonalRecordRepository personalRecordRepository)
+    public StatisticsViewModel(UserViewModel userViewModel, WorkoutRepository workoutRepository, PersonalRecordRepository personalRecordRepository, ExerciseRepository exerciseRepository)
     {
         _userViewModel = userViewModel;
         _workoutRepository = workoutRepository;
         _personalRecordRepository = personalRecordRepository;
+        _exerciseRepository = exerciseRepository;
     }
     public async Task GetActiveUser()
     {
         User = _userViewModel.User;
         FavoriteExercises = new ObservableCollection<FavoriteExercise>(User.FavoriteExercises);
+        Exercises = new ObservableCollection<Exercise>(await _exerciseRepository.GetAllAsync());
         SelectedExercise = FavoriteExercises.FirstOrDefault() ?? new FavoriteExercise();
         SelectedTimeFrame = "Since start";
         await GetPersonalRecords();
@@ -159,7 +163,7 @@ public class StatisticsViewModel : BaseViewModel
         int maxCategories = 6;
         Dictionary<string, int> exerciseSetCounts = new();
 
-        foreach (var exercise in FavoriteExercises)
+        foreach (var exercise in Exercises)
         {
             int totalSets = 0;
 
