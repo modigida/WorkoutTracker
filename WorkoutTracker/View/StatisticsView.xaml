@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="10,15" HorizontalAlignment="Center" >
             <TextBlock Text="Statistics for " FontSize="24"/>
             <TextBlock Text="{Binding StatisticsVM.User.UserName}" FontSize="24"/>
         </StackPanel>

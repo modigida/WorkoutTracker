@@ -153,12 +153,10 @@ public class StatisticsViewModel : BaseViewModel
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#45B39D")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5F6A6A"))
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"))
         };
 
-        int colorIndex = 0;
+        int maxCategories = 6;
         Dictionary<string, int> exerciseSetCounts = new();
 
         foreach (var exercise in FavoriteExercises)
@@ -179,28 +177,52 @@ public class StatisticsViewModel : BaseViewModel
             exerciseSetCounts[exercise.ExerciseName] = totalSets;
         }
 
-        double grandTotalSets = exerciseSetCounts.Values.Sum();
+        var sortedExercises = exerciseSetCounts.OrderByDescending(kvp => kvp.Value).ToList();
 
-        if (grandTotalSets == 0)
+        double grandTotalSets = sortedExercises.Sum(kvp => kvp.Value);
+        if (grandTotalSets == 0) return;
+
+        int colorIndex = 0;
+        double otherSets = 0;
+
+        for (int i = 0; i < sortedExercises.Count; i++)
         {
-            return;
+            if (i < maxCategories)
+            {
+                var kvp = sortedExercises[i];
+                double percentage = (kvp.Value / grandTotalSets) * 100;
+
+                PercentPerExerciseDiagram.Add(new PieSeries
+                {
+                    Title = $"{kvp.Key}, {kvp.Value} sets = {percentage:F1}%",
+                    Values = new ChartValues<double> { kvp.Value },
+                    Fill = colors[colorIndex % colors.Count],
+                    Stroke = diagramBorder,
+                    StrokeThickness = 1,
+                    PushOut = 0
+                });
+
+                colorIndex++;
+            }
+            else
+            {
+                otherSets += sortedExercises[i].Value;
+            }
         }
 
-        foreach (var kvp in exerciseSetCounts)
+        if (otherSets > 0)
         {
-            double percentage = (kvp.Value / grandTotalSets) * 100;
+            double otherPercentage = (otherSets / grandTotalSets) * 100;
 
             PercentPerExerciseDiagram.Add(new PieSeries
             {
-                Title = $"{kvp.Key}, {kvp.Value} sets = {percentage:F1}%",
-                Values = new ChartValues<double> { kvp.Value },
-                Fill = colors[colorIndex % colors.Count],
+                Title = $"Övrigt, {otherSets} sets = {otherPercentage:F1}%",
+                Values = new ChartValues<double> { otherSets },
+                Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BDC3C7")),
                 Stroke = diagramBorder,
                 StrokeThickness = 1,
                 PushOut = 0
             });
-
-            colorIndex++;
         }
     }
     private void GetTotalWeightLifted()
@@ -292,7 +314,7 @@ public class StatisticsViewModel : BaseViewModel
             };
 
             var formattedPercentage = FormatDouble(achievedPercentage);
-            PercentOfGoalString = $"you have reached {formattedPercentage} % of your goal for {SelectedExercise.ExerciseName.ToLower()}";
+            PercentOfGoalString = $"you have reached {formattedPercentage} % of your {SelectedExercise.ExerciseName.ToLower()} goal";
         }
     }
     public string FormatDouble(double number)
