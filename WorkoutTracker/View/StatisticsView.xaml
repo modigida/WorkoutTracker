@@ -31,7 +31,7 @@
                 <ComboBox 
             ItemsSource="{Binding StatisticsVM.TimeFrames}"
             SelectedItem="{Binding StatisticsVM.SelectedTimeFrame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Grid.Row="0" HorizontalAlignment="Center" Width="100" Margin="5">
+            Grid.Row="0" HorizontalAlignment="Center" Width="150" Margin="5">
                     <ComboBox.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
@@ -59,7 +59,7 @@
                 <ComboBox 
                     ItemsSource="{Binding StatisticsVM.FavoriteExercises}"
                     SelectedItem="{Binding StatisticsVM.SelectedExercise, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Grid.Row="0" HorizontalAlignment="Center" Width="100" Margin="5">
+                    Grid.Row="0" HorizontalAlignment="Center" Width="150" Margin="5">
                     <ComboBox.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#90F0F0F0" />
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#80414141" />
