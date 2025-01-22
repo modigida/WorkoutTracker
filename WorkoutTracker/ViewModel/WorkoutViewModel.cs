@@ -10,6 +10,7 @@ public class WorkoutViewModel : BaseViewModel
 {
     private readonly MainWindowViewModel _mainWindowViewModel;
     private readonly ExerciseListViewModel _exerciseListViewModel;
+    private readonly WorkoutListViewModel _workoutListViewModel;
     private readonly WorkoutRepository _workoutRepository;
     private readonly UserViewModel _userViewModel;
     private readonly PersonalRecordRepository _personalRecordRepository;
@@ -119,7 +120,8 @@ public class WorkoutViewModel : BaseViewModel
     public ICommand SaveWorkoutExerciseCommand { get; }
     public ICommand FinishWorkoutCommand { get; }
     public WorkoutViewModel(MainWindowViewModel mainWindowViewModel, WorkoutRepository workoutRepository, 
-        ExerciseListViewModel exerciseListViewModel, UserViewModel userViewModel, PersonalRecordRepository personalRecordRepository)
+        ExerciseListViewModel exerciseListViewModel, UserViewModel userViewModel, PersonalRecordRepository personalRecordRepository, 
+        WorkoutListViewModel workoutListViewModel)
     {
         _mainWindowViewModel = mainWindowViewModel;
         _workoutRepository = workoutRepository;
@@ -130,6 +132,7 @@ public class WorkoutViewModel : BaseViewModel
         DeleteSetCommand = new RelayCommand<Set>(async set => await DeleteSet(set));
         SaveWorkoutExerciseCommand = new RelayCommand(SaveWorkoutExercise);
         FinishWorkoutCommand = new RelayCommand(FinishWorkout);
+        _workoutListViewModel = workoutListViewModel;
     }
     public async Task StartNewWorkout(string userId)
     {
@@ -391,6 +394,8 @@ public class WorkoutViewModel : BaseViewModel
 
         _mainWindowViewModel.IsAvailable = true;
         _mainWindowViewModel.IsMenuEnabled = true;
+        var timeSpan = Workout.EndTime - Workout.Date;
+        Workout.WorkoutLength = _workoutListViewModel.FormatWorkoutLength(timeSpan);
 
         _mainWindowViewModel.OpenWorkoutDetails(Workout);
     }

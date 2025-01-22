@@ -128,7 +128,7 @@ public class MainWindowViewModel : BaseViewModel
         ExerciseDetailsVM = new ExerciseDetailsViewModel(ExerciseListVM, new MuscleGroupRepository(dbContext), new ExerciseRepository(dbContext), this);
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext), new PersonalRecordRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext), this);
-        WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM, UserVM, new PersonalRecordRepository(dbContext));
+        WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM, UserVM, new PersonalRecordRepository(dbContext), WorkoutListVM);
         WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext), WorkoutListVM);
         StatisticsVM = new StatisticsViewModel(UserVM, new WorkoutRepository(dbContext), new PersonalRecordRepository(dbContext), new ExerciseRepository(dbContext));
 
@@ -193,6 +193,7 @@ public class MainWindowViewModel : BaseViewModel
     }
     private async void OpenStatistics(object obj)
     {
+        if (UserVM.User.Id == null) { return; }
         await StatisticsVM.GetActiveUser();
         SetViewVisibility(() => IsStatisticsVisible = true);
     }
@@ -214,17 +215,20 @@ public class MainWindowViewModel : BaseViewModel
     }
     private async void OpenUser(object obj)
     {
+        if (UserVM.User.Id == null) { return; }
         await UserVM.GetUser(UserVM.User.Id);
         SetViewVisibility(() => IsUserVisible = true);
         IsOptionsMenuOpen = false;
     }
     private async void OpenWorkoutList(object obj)
     {
+        if (UserVM.User.Id == null) { return; }
         await WorkoutListVM.GetAllWorkouts(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutListVisible = true);
     }
     private async void OpenWorkout(object obj)
     {
+        if (UserVM.User.Id == null) { return; }
         await WorkoutVM.StartNewWorkout(UserVM.User.Id);
         SetViewVisibility(() => IsWorkoutVisible = true);
     }

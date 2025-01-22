@@ -167,7 +167,12 @@ public class StatisticsViewModel : BaseViewModel
             IsComboboxVisible = false;
             return;
         }
-
+        if (Exercises.Count == 0)
+        {
+            NoExercisesString = "no statistics available";
+            IsComboboxVisible = false;
+            return;
+        }
         IsComboboxVisible = true;
         NoExercisesString = string.Empty;
 
