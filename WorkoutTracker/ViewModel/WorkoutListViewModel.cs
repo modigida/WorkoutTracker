@@ -34,7 +34,8 @@ public class WorkoutListViewModel : BaseViewModel
     public async Task GetAllWorkouts(string userId)
     {
         var workouts = await _workoutRepository.GetAllByUserIdAsync(userId);
-        Workouts = new ObservableCollection<Workout>(workouts);
+        var sortedWorkouts = workouts.OrderByDescending(w => w.Date).ToList();
+        Workouts = new ObservableCollection<Workout>(sortedWorkouts);
     }
 }
 
