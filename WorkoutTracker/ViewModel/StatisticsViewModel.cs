@@ -234,7 +234,6 @@ public class StatisticsViewModel : BaseViewModel
             });
         }
     }
-
     private void GetTotalWeightLifted()
     {
         TotalWeightLifted = string.Empty;

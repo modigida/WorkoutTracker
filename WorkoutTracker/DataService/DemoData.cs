@@ -1,10 +1,8 @@
 ﻿using MongoDB.Driver;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutTracker.DataService;
-
 public class DemoData
 {
     public static void AddDemoUser(MongoDbContext dbContext)
@@ -32,7 +30,6 @@ public class DemoData
 
         AddDemoWorkouts(userId, dbContext);
     }
-
     private static void AddDemoWorkouts(string userId, MongoDbContext dbContext)
     {
         var workoutsCollection = dbContext.GetCollection<Workout>("Workouts");

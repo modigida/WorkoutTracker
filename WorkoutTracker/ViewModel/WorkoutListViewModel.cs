@@ -47,7 +47,6 @@ public class WorkoutListViewModel : BaseViewModel
         var sortedWorkouts = workouts.OrderByDescending(w => w.Date).ToList();
         Workouts = new ObservableCollection<Workout>(sortedWorkouts);
     }
-
     private string FormatWorkoutLength(TimeSpan workoutLength)
     {
         if (workoutLength.TotalMinutes <= 0)
