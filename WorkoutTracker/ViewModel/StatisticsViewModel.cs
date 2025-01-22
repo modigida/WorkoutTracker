@@ -150,15 +150,15 @@ public class StatisticsViewModel : BaseViewModel
         }
 
         var colors = new List<SolidColorBrush>
-        {
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#76448A")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
-            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"))
-        };
+    {
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#76448A")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
+        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"))
+    };
 
         int maxCategories = 6;
         Dictionary<string, int> exerciseSetCounts = new();
@@ -178,10 +178,15 @@ public class StatisticsViewModel : BaseViewModel
                 }
             }
 
-            exerciseSetCounts[exercise.ExerciseName] = totalSets;
+            if (totalSets > 0) 
+            {
+                exerciseSetCounts[exercise.ExerciseName] = totalSets;
+            }
         }
 
-        var sortedExercises = exerciseSetCounts.OrderByDescending(kvp => kvp.Value).ToList();
+        var sortedExercises = exerciseSetCounts
+            .OrderByDescending(kvp => kvp.Value)
+            .ToList();
 
         double grandTotalSets = sortedExercises.Sum(kvp => kvp.Value);
         if (grandTotalSets == 0) return;
@@ -229,6 +234,7 @@ public class StatisticsViewModel : BaseViewModel
             });
         }
     }
+
     private void GetTotalWeightLifted()
     {
         TotalWeightLifted = string.Empty;
