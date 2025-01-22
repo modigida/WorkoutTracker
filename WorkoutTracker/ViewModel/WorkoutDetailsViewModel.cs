@@ -56,7 +56,7 @@ public class WorkoutDetailsViewModel : BaseViewModel
     }
     public async Task GetWorkout(Workout workout)
     {
-        Workout = _workoutListViewModel.SelectedWorkout;
+        Workout = workout;//_workoutListViewModel.SelectedWorkout;
         Note = Workout.Notes;
         GetExercises();
     }

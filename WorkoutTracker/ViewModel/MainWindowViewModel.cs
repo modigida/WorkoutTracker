@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using WorkoutTracker.Commands;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;

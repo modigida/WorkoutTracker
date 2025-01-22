@@ -138,6 +138,18 @@ public class StatisticsViewModel : BaseViewModel
         UserPersonalRecords = new List<PersonalRecord>(await _personalRecordRepository.GetBestRecordsAsync(User.Id));
         LoadPercentOfGoal();
     }
+    private string _noExercisesString;
+    public string NoExercisesString
+    {
+        get => _noExercisesString;
+        set => SetProperty(ref _noExercisesString, value);
+    }
+    private bool _isComboboxVisible;
+    public bool IsComboboxVisible
+    {
+        get => _isComboboxVisible;
+        set => SetProperty(ref _isComboboxVisible, value);
+    }
     private void LoadPercentPerExercise()
     {
         if (PercentPerExerciseDiagram == null)
@@ -149,16 +161,26 @@ public class StatisticsViewModel : BaseViewModel
             PercentPerExerciseDiagram.Clear();
         }
 
+        if (FilteredWorkouts.Count == 0)
+        {
+            NoExercisesString = "no exercises registered";
+            IsComboboxVisible = false;
+            return;
+        }
+
+        IsComboboxVisible = true;
+        NoExercisesString = string.Empty;
+
         var colors = new List<SolidColorBrush>
-    {
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#76448A")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
-        new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"))
-    };
+        {
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EC7063")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#76448A")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8C471")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC7633")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#5499C7")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"))
+        };
 
         int maxCategories = 6;
         Dictionary<string, int> exerciseSetCounts = new();
@@ -236,6 +258,15 @@ public class StatisticsViewModel : BaseViewModel
     }
     private void GetTotalWeightLifted()
     {
+        if (SelectedExercise.ExerciseName == null) 
+        {
+            IsComboboxVisible = false;
+            TotalWeightLifted = "no data to show";
+            AverageWeightPerRep = "add goals on User page to get statistics";
+            return; 
+        }
+
+        IsComboboxVisible = true;
         TotalWeightLifted = string.Empty;
         var totalWeight = 0.0;
         var amountOfReps = 0.0;
@@ -270,6 +301,13 @@ public class StatisticsViewModel : BaseViewModel
     }
     private void LoadPercentOfGoal()
     {
+        if (SelectedExercise.ExerciseName == null) 
+        {
+            if (PercentOfGoalDiagram != null) { PercentOfGoalDiagram.Clear(); }
+            PercentOfGoalString = string.Empty;
+            return; 
+        }
+
         PercentOfGoalString = string.Empty;
         double goal = SelectedExercise.TargetWeight;
         double record = UserPersonalRecords.FirstOrDefault(pr => pr.ExerciseName == SelectedExercise.ExerciseName)?.MaxWeight ?? 0;
