@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using WorkoutTracker.Database;
 using WorkoutTracker.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WorkoutTracker.DataService;
 
@@ -40,6 +41,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddDays(-1),
+            EndTime = DateTime.UtcNow.AddDays(-1).AddHours(1).AddMinutes(15),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Bench Press", Sets = new List<Set>
@@ -48,6 +50,13 @@ public class DemoData
                     new Set { Reps = 10, Weight = 25 },
                     new Set { Reps = 8, Weight = 30 },
                     new Set { Reps = 6, Weight = 35 }
+                }
+                },
+                new WorkoutExercise { ExerciseName = "Overhead Press", Sets = new List<Set>
+                {
+                    new Set { Reps = 10, Weight = 12.5 },
+                    new Set { Reps = 10, Weight = 15 },
+                    new Set { Reps = 8, Weight = 20 },
                 }
                 },
                 new WorkoutExercise { ExerciseName = "Squat", Sets = new List<Set>
@@ -64,7 +73,8 @@ public class DemoData
         var workout2 = new Workout
         {
             UserId = userId,
-            Date = DateTime.UtcNow.AddDays(-25),
+            Date = DateTime.UtcNow.AddDays(-1),
+            EndTime = DateTime.UtcNow.AddDays(-1).AddMinutes(45),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Deadlift", Sets = new List<Set>
@@ -90,6 +100,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddYears(-1).AddDays(34),
+            EndTime = DateTime.UtcNow.AddYears(-1).AddDays(34).AddMinutes(55),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Deadlift", Sets = new List<Set>
@@ -116,6 +127,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddDays(-72),
+            EndTime = DateTime.UtcNow.AddDays(-72).AddHours(1).AddMinutes(35),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Squat", Sets = new List<Set>
@@ -141,6 +153,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddDays(-15),
+            EndTime = DateTime.UtcNow.AddDays(-15).AddHours(1).AddMinutes(05),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Leg Press", Sets = new List<Set>
@@ -166,6 +179,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddYears(-1).AddDays(-12),
+            EndTime = DateTime.UtcNow.AddYears(-1).AddDays(-12).AddMinutes(35),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Leg Press", Sets = new List<Set>
@@ -203,6 +217,7 @@ public class DemoData
         {
             UserId = userId,
             Date = DateTime.UtcNow.AddYears(-1).AddDays(-23),
+            EndTime = DateTime.UtcNow.AddYears(-1).AddDays(-23).AddMinutes(55),
             Exercises = new List<WorkoutExercise>
             {
                 new WorkoutExercise { ExerciseName = "Leg Press", Sets = new List<Set>

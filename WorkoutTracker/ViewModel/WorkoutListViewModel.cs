@@ -34,8 +34,28 @@ public class WorkoutListViewModel : BaseViewModel
     public async Task GetAllWorkouts(string userId)
     {
         var workouts = await _workoutRepository.GetAllByUserIdAsync(userId);
+
+        foreach (var workout in workouts)
+        {
+            if (workout.EndTime != null && workout.Date != null)
+            {
+                var timeSpan = workout.EndTime - workout.Date;
+                workout.WorkoutLength = FormatWorkoutLength(timeSpan);
+            }
+        }
+
         var sortedWorkouts = workouts.OrderByDescending(w => w.Date).ToList();
         Workouts = new ObservableCollection<Workout>(sortedWorkouts);
     }
-}
 
+    private string FormatWorkoutLength(TimeSpan workoutLength)
+    {
+        if (workoutLength.TotalMinutes <= 0)
+        {
+            return "data missing";
+        }
+
+        int totalMinutes = (int)Math.Round(workoutLength.TotalMinutes);
+        return $"{totalMinutes} minutes";
+    }
+}

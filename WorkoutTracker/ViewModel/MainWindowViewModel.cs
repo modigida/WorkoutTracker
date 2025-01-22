@@ -130,7 +130,7 @@ public class MainWindowViewModel : BaseViewModel
         UserVM = new UserViewModel(this, new UserRepository(dbContext), new ExerciseRepository(dbContext), new PersonalRecordRepository(dbContext));
         WorkoutListVM = new WorkoutListViewModel(new WorkoutRepository(dbContext), this);
         WorkoutVM = new WorkoutViewModel(this, new WorkoutRepository(dbContext), ExerciseListVM, UserVM, new PersonalRecordRepository(dbContext));
-        WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext));
+        WorkoutDetailsVM = new WorkoutDetailsViewModel(new WorkoutRepository(dbContext), WorkoutListVM);
         StatisticsVM = new StatisticsViewModel(UserVM, new WorkoutRepository(dbContext), new PersonalRecordRepository(dbContext), new ExerciseRepository(dbContext));
 
         OpenExerciseDetailsCommand = new RelayCommand(OpenExerciseDetails);

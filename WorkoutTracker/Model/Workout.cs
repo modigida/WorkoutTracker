@@ -11,4 +11,6 @@ public class Workout
     public DateTime EndTime { get; set; }
     public List<WorkoutExercise> Exercises { get; set; }
     public string Notes { get; set; }
+    [BsonIgnore]
+    public string WorkoutLength { get; set; }
 }

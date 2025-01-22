@@ -6,6 +6,7 @@ namespace WorkoutTracker.ViewModel;
 public class WorkoutDetailsViewModel : BaseViewModel
 {
     private readonly WorkoutRepository _workoutRepository;
+    private readonly WorkoutListViewModel _workoutListViewModel;
     private Workout _workout;
     public Workout Workout
     {
@@ -48,20 +49,15 @@ public class WorkoutDetailsViewModel : BaseViewModel
         get => _workoutLength;
         set => SetProperty(ref _workoutLength, value);
     }
-    public WorkoutDetailsViewModel(WorkoutRepository workoutRepository)
+    public WorkoutDetailsViewModel(WorkoutRepository workoutRepository, WorkoutListViewModel workoutListViewModel)
     {
         _workoutRepository = workoutRepository;
+        _workoutListViewModel = workoutListViewModel;
     }
     public async Task GetWorkout(Workout workout)
     {
-        Workout = await _workoutRepository.GetByIdAsync(workout.Id);
-        WorkoutLength = Workout.EndTime - Workout.Date;
+        Workout = _workoutListViewModel.SelectedWorkout;
         Note = Workout.Notes;
-
-        if (_workoutLength.TotalMinutes > 60)
-        {
-            _workoutLength = TimeSpan.FromMinutes(_workoutLength.TotalMinutes);
-        }
         GetExercises();
     }
     private void GetExercises()
@@ -73,15 +69,5 @@ public class WorkoutDetailsViewModel : BaseViewModel
         }
 
         Exercises = new ObservableCollection<WorkoutExercise>(Workout.Exercises);
-
-        //var groupedExercises = Workout.Exercises
-        //    .GroupBy(ex => ex.ExerciseName)
-        //    .Select(group => new WorkoutExercise
-        //    {
-        //        ExerciseName = group.Key,
-        //        Sets = group.SelectMany(ex => ex.Sets).ToList()
-        //    });
-        //
-        //Exercises = new ObservableCollection<WorkoutExercise>(groupedExercises);
     }
 }
