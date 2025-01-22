@@ -178,6 +178,7 @@ public class WorkoutViewModel : BaseViewModel
         }
 
         SelectedWorkoutExercise = WorkoutExercises.FirstOrDefault(name => name.ExerciseName == SelectedExercise.ExerciseName);
+        if (SelectedWorkoutExercise == null) { return; }
 
         ManageSets();
         ManagePersonalRecord();
@@ -221,6 +222,7 @@ public class WorkoutViewModel : BaseViewModel
     }
     private void CreateWorkoutExercise()
     {
+        if (SelectedExercise == null) { return; }
         var existingExercise = WorkoutExercises.FirstOrDefault(we => we.ExerciseName == SelectedExercise.ExerciseName);
         if (existingExercise != null)
         {
@@ -282,12 +284,23 @@ public class WorkoutViewModel : BaseViewModel
         {
             Sets.Remove(deleteSet);
 
-            foreach (var set in WorkoutExercises)
+            var workoutExercisesToRemove = new List<WorkoutExercise>();
+
+            foreach (var workoutExercise in WorkoutExercises)
             {
-                if (set.Sets.Contains(deleteSet))
+                if (workoutExercise != null && workoutExercise.Sets.Contains(deleteSet))
                 {
-                    set.Sets.Remove(deleteSet);
+                    workoutExercise.Sets.Remove(deleteSet);
+                    if (workoutExercise.Sets.Count == 0)
+                    {
+                        workoutExercisesToRemove.Add(workoutExercise);
+                    }
                 }
+            }
+
+            foreach (var workoutExercise in workoutExercisesToRemove)
+            {
+                WorkoutExercises.Remove(workoutExercise);
             }
         }
 
@@ -299,6 +312,8 @@ public class WorkoutViewModel : BaseViewModel
     }
     private async void CheckIfPersonalRecord(double weight)
     {
+        if (SelectedWorkoutExercise == null) { return; }
+
         var personalRecords = await _personalRecordRepository.GetByExerciseAsync(SelectedWorkoutExercise.ExerciseName, _userViewModel.User.Id);
 
         foreach (var pr in personalRecords)
