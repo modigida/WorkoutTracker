@@ -65,8 +65,8 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="80" />
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal">

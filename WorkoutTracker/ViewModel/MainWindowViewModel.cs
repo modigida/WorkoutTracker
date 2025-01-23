@@ -202,6 +202,7 @@ public class MainWindowViewModel : BaseViewModel
         if (UserVM.FavoriteExercises != null)
         {
             UserVM.FavoriteExercises.Clear();
+            UserVM.PersonalRecords.Clear();
         }
         UserVM.User = new User
         {
